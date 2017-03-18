@@ -5,6 +5,8 @@ import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
 import DB.Services.VoiceService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -144,20 +146,49 @@ public class ThreadController {
         return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
     }
 
-//    @RequestMapping(
-//            value = "/posts",
-//            method = RequestMethod.GET,
-//            produces = MediaType.APPLICATION_JSON_VALUE
-//    )
-//    public ResponseEntity<PostsInThread> getPostsInThread(
-//            @PathVariable("slug_or_id") String slug,
-//            @RequestParam(value = "limit", required = false, defaultValue = 100) int limit,
-//            @RequestParam(value = "marker", required = false) String marker,
-//            @RequestParam(value = "sort", required = false, defaultValue = "flat") String sort,
-//            @RequestParam(value = "desc", required = false) Boolean desc
-//    ) {
-//
-//    }
+    @RequestMapping(
+            value = "/posts",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity getPostsInThread(
+            @PathVariable("slug_or_id") String slug,
+            @RequestParam(value = "limit", required = false, defaultValue = "100"                                                                                                                                                       ) int limit,
+            @RequestParam(value = "marker", required = false) String marker,
+            @RequestParam(value = "sort", required = false, defaultValue = "flat") String sort,
+            @RequestParam(value = "desc", required = false) Boolean desc
+    ) throws JSONException {
+        ForumThread thread;
+        JSONObject result = new JSONObject();
+        List<Post> posts = null;
+        try {
+             thread = threadService.getThread(slug);
+        }
+        catch (EmptyResultDataAccessException e){
+            try {
+                thread = threadService.getThread(Integer.parseInt(slug));
+            }
+            catch (EmptyResultDataAccessException e1){
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        }
+        switch (sort){
+            case "flat":
+                posts = postsService.getFlatPosts(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                break;
+            case "tree":
+                posts = postsService.getTreePosts(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                break;
+            case "parent_tree":
+                List<Integer> parents = postsService.getParents(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                posts = postsService.getParentTreePosts(thread.getSlug(), parents, desc);
+                break;
+        }
+        result.put("marker", marker);
+        result.put("posts", posts);
+
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
 
     @RequestMapping(
             value = "/vote",
