@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by frozenfoot on 15.03.17.
  */
 @RestController
-@RequestMapping("user/{nickname}")
+@RequestMapping("api/user/{nickname}")
 public class UserController {
 
       JdbcTemplate jdbcTemplate;

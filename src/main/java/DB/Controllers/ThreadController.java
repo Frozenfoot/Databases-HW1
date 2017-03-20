@@ -5,9 +5,6 @@ import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
 import DB.Services.VoiceService;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +20,7 @@ import java.util.List;
  * Created by frozenfoot on 15.03.17.
  */
 @RestController
-@RequestMapping("thread/{slug_or_id}")
+@RequestMapping("api/thread/{slug_or_id}")
 public class ThreadController {
 
     private JdbcTemplate jdbcTemplate;
@@ -56,12 +53,19 @@ public class ThreadController {
         User author;
         try{
             id = Integer.parseInt(slug);
-            thread = threadService.getThread(id);
         }
         catch (NumberFormatException e){
-            thread = threadService.getThread(slug);
+            id = null;
         }
-        if (thread == null){
+        try{
+            if(id == null){
+                thread = threadService.getThread(slug);
+            }
+            else{
+                thread = threadService.getThread(id);
+            }
+        }
+        catch (EmptyResultDataAccessException e){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
@@ -107,19 +111,24 @@ public class ThreadController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getThreadDetails(@PathVariable("slug_or_id") String slug){
-        int id;
+        Integer id;
         ForumThread thread;
         try{
-            thread = threadService.getThread(slug);
-        }
-        catch (EmptyResultDataAccessException e){
             id = Integer.parseInt(slug);
-            try{
+        }
+        catch (NumberFormatException e){
+            id = null;
+        }
+        try{
+            if(id == null) {
+                thread = threadService.getThread(slug);
+            }
+            else{
                 thread = threadService.getThread(id);
             }
-            catch (EmptyResultDataAccessException e1){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity(thread, HttpStatus.OK);
     }
@@ -134,19 +143,25 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody ForumThread thread
     ) {
-        int id;
+        Integer id;
         ForumThread dbThread;
         try{
-            dbThread = threadService.getThread(slug);
-        }
-        catch (EmptyResultDataAccessException e){
             id = Integer.parseInt(slug);
-            try{
+        }
+        catch (NumberFormatException e){
+            id = null;
+        }
+
+        try{
+            if(id == null){
+                dbThread = threadService.getThread(slug);
+            }
+            else {
                 dbThread = threadService.getThread(id);
             }
-            catch (EmptyResultDataAccessException e1){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         threadService.changeThread(thread, dbThread.getId());
         return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
@@ -168,6 +183,7 @@ public class ThreadController {
         List<Post> posts = null;
 
         Integer offset = 0;
+        Integer id = null;
         if(marker.matches("\\d+")){
             offset = Integer.parseInt(marker);
         }
@@ -176,15 +192,22 @@ public class ThreadController {
         }
 
         try {
-             thread = threadService.getThread(slug);
+             id = Integer.parseInt(slug);
+        }
+        catch (NumberFormatException e){
+            id = null;
+        }
+
+        try{
+            if (id == null){
+                thread = threadService.getThread(slug);
+            }
+            else{
+                thread = threadService.getThread(id);
+            }
         }
         catch (EmptyResultDataAccessException e){
-            try {
-                thread = threadService.getThread(Integer.parseInt(slug));
-            }
-            catch (EmptyResultDataAccessException e1){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         int sizeOfOffset = 0;
@@ -217,19 +240,32 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody Vote vote
     ) {
-        int id;
+        Integer id;
         ForumThread dbThread;
         try{
-            dbThread = threadService.getThread(slug);
-        }
-        catch (EmptyResultDataAccessException e){
             id = Integer.parseInt(slug);
-            try{
+        }
+        catch (NumberFormatException e){
+            id = null;
+        }
+
+        try{
+            if(id == null){
+                dbThread = threadService.getThread(slug);
+            }
+            else{
                 dbThread = threadService.getThread(id);
             }
-            catch (EmptyResultDataAccessException e1){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        try{
+            User voteUser = userService.getUser(vote.getNickname());
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         try {

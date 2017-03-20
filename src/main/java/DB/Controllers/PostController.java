@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by frozenfoot on 15.03.17.
  */
 @RestController
-@RequestMapping("post/{id}")
+@RequestMapping("api/post/{id}")
 public class PostController {
 
     private JdbcTemplate jdbcTemplate;
@@ -45,7 +45,7 @@ public class PostController {
     )
     public ResponseEntity getPostDetails(
             @PathVariable("id") int id,
-            @RequestParam(value = "related", required = false) ArrayList<String> related) throws JSONException {
+            @RequestParam(value = "related", required = false) ArrayList<String> related){
 
         Post post;
         try{
@@ -54,6 +54,17 @@ public class PostController {
         catch (EmptyResultDataAccessException e){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+
+        System.out.println(
+                "PostDetails:\nauthor: " + post.getAuthor() +
+                "\ncreated: " + post.getCreated() +
+                "\nforum: " + post.getCreated() +
+                "\nid: " + post.getId() +
+                "\nisEdited: " + post.getIsEdited() +
+                "\nmessage: " + post.getMessage() +
+                "\nparent: " + post.getParent() +
+                "\nthread: " + post.getThread());
+
         PostDetails postDetails = new PostDetails();
         postDetails.setPost(post);
 
@@ -84,6 +95,17 @@ public class PostController {
             @PathVariable("id") int id,
             @RequestBody Post post
     ) {
+        Post dbPost;
+        try{
+            dbPost = postService.getPost(id);
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        if(post.getMessage() == null || dbPost.getMessage().equals(post.getMessage())){
+            return new ResponseEntity(dbPost, HttpStatus.OK);
+        }
+
         try{
             postService.changePost(post, id);
             return new ResponseEntity(postService.getPost(id), HttpStatus.OK);

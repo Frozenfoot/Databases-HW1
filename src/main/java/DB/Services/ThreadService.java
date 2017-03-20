@@ -143,7 +143,9 @@ public class ThreadService {
     }
 
     public void changeThread(ForumThread thread, int id){
-        String query = "UPDATE threads SET message = (?), title = (?) WHERE id = (?)";
+        String query = "UPDATE threads " +
+                "SET message = COALESCE(?, message), " +
+                "title = COALESCE(?, title) WHERE id = (?)";
         jdbcTemplate.update(query, thread.getMessage(), thread.getTitle(), id);
     }
 }

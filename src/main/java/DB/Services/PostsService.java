@@ -60,12 +60,12 @@ public class PostsService {
                 post.getMessage(),
                 post.getParent(),
                 thread.getId()
-                );
+        );
     }
 
     public void changePost(Post post, int id){
         String query = "UPDATE posts" +
-                " SET message = ?, isEdited = true " +
+                " SET message = COALESCE(?, message), isEdited = TRUE " +
                 "WHERE id = ?";
         jdbcTemplate.update(query, new Object[]{post.getMessage(), id});
     }
@@ -77,18 +77,18 @@ public class PostsService {
                 " ORDER BY id" +
                 " DESC LIMIT ?";
         return jdbcTemplate.query(query,(rs, rowNum) -> {
-            Post post = new Post(
-                    rs.getString("author"),
-                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(rs.getTimestamp("created")),
-                    rs.getString("forum"),
-                    rs.getInt("id"),
-                    rs.getBoolean("isEdited"),
-                    rs.getString("message"),
-                    rs.getInt("parent"),
-                    rs.getInt("thread")
-            );
-            return post;
-        },
+                    Post post = new Post(
+                            rs.getString("author"),
+                            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(rs.getTimestamp("created")),
+                            rs.getString("forum"),
+                            rs.getInt("id"),
+                            rs.getBoolean("isEdited"),
+                            rs.getString("message"),
+                            rs.getInt("parent"),
+                            rs.getInt("thread")
+                    );
+                    return post;
+                },
                 thread.getId(),
                 length);
     }
@@ -121,19 +121,19 @@ public class PostsService {
     public List<Post> getTreePosts(String slug, int limit, int pageId, Boolean desc){
         String query =
                 "WITH RECURSIVE tree (author, created, forum, id, isEdited, message, parent, thread, _posts_)" +
-                " AS (" +
-                " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
-                " FROM posts WHERE parent = 0 " +
-                " UNION ALL " +
-                " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
-                " FROM posts p " +
-                " JOIN tree ON tree.id = p.parent) " +
-                " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
-                " AS _posts_ FROM tree tr " +
-                " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
-                " JOIN forums f ON (t.forum = f.slug) " +
-                " JOIN users u ON (u.nickname = tr.author) " +
-                " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
+                        " AS (" +
+                        " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
+                        " FROM posts WHERE parent = 0 " +
+                        " UNION ALL " +
+                        " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
+                        " FROM posts p " +
+                        " JOIN tree ON tree.id = p.parent) " +
+                        " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
+                        " AS _posts_ FROM tree tr " +
+                        " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
+                        " JOIN forums f ON (t.forum = f.slug) " +
+                        " JOIN users u ON (u.nickname = tr.author) " +
+                        " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(
                 query,
                 (rs, rowNum) -> {
@@ -152,34 +152,34 @@ public class PostsService {
                 slug,
                 limit,
                 pageId
-                );
+        );
     }
 
     public List<Integer> getParents(String slug, int limit, int pageId, Boolean desc){
         String query =
                 " SELECT posts.id FROM posts " +
-                " JOIN threads ON threads.id = posts.thread " +
-                " WHERE parent = 0 AND threads.slug = ? " +
-                " ORDER BY posts.id " + (desc == Boolean.TRUE ? "DESC " : "") + "LIMIT ? OFFSET ?";
+                        " JOIN threads ON threads.id = posts.thread " +
+                        " WHERE parent = 0 AND threads.slug = ? " +
+                        " ORDER BY posts.id " + (desc == Boolean.TRUE ? "DESC " : "") + "LIMIT ? OFFSET ?";
         return jdbcTemplate.queryForList(query, new Object[]{slug, limit, pageId}, Integer.class);
     }
 
     public List<Post> getParentTreePosts(String slug, List<Integer> parents, Boolean desc){
         List<Post> result = new ArrayList<>();
         String query =  "WITH RECURSIVE tree (author, created, forum, id, isEdited, message, parent, thread, _posts_)" +
-                        " AS (" +
-                        " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
-                        " FROM posts WHERE id = ? " +
-                        " UNION ALL " +
-                        " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
-                        " FROM posts p " +
-                        " JOIN tree ON tree.id = p.parent) " +
-                        " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
-                        " AS _posts_ FROM tree tr " +
-                        " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
-                        " JOIN forums f ON (t.forum = f.slug) " +
-                        " JOIN users u ON (u.nickname = tr.author) " +
-                        " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "");
+                " AS (" +
+                " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
+                " FROM posts WHERE id = ? " +
+                " UNION ALL " +
+                " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
+                " FROM posts p " +
+                " JOIN tree ON tree.id = p.parent) " +
+                " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
+                " AS _posts_ FROM tree tr " +
+                " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
+                " JOIN forums f ON (t.forum = f.slug) " +
+                " JOIN users u ON (u.nickname = tr.author) " +
+                " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "");
         for (Integer parentId : parents){
             result.addAll(jdbcTemplate.query(
                     query,

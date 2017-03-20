@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS posts(
   forum CITEXT NOT NULL REFERENCES forums(slug),
   id SERIAL PRIMARY KEY,
   isEdited BOOLEAN DEFAULT FALSE,
-  message TEXT,
+  message TEXT NOT NULL ,
   parent INTEGER DEFAULT 0,
   thread INTEGER REFERENCES threads(id)
 );

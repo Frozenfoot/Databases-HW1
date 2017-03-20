@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by frozenfoot on 15.03.17.
  */
 @RestController
-@RequestMapping("service")
+@RequestMapping("api/service")
 public class ServiceController {
 
     private JdbcTemplate jdbcTemplate;

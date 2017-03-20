@@ -1,7 +1,6 @@
 package DB.Models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by frozenfoot on 20.03.17.

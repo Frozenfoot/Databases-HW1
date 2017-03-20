@@ -21,7 +21,7 @@ import java.util.List;
  * Created by frozenfoot on 15.03.17.
  */
 @RestController
-@RequestMapping("forum")
+@RequestMapping("api/forum")
 public class ForumController {
 
     private ForumService forumService;
