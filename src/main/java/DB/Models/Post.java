@@ -70,12 +70,12 @@ public class Post {
         this.id = id;
     }
 
-    public Boolean getEdited() {
+    public Boolean getIsEdited() {
         return isEdited;
     }
 
-    public void setEdited(Boolean edited) {
-        isEdited = edited;
+    public void setIsEdited(Boolean isEdited) {
+        this.isEdited = isEdited;
     }
 
     public String getMessage() {

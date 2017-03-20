@@ -35,9 +35,8 @@ public class UserService {
 
     public User getUser(String nickname){
 
-        String querry = "SELECT * FROM users WHERE LOWER(users.nickname) = LOWER(?)" +
-                " OR LOWER(users.email) = LOWER(?)";
-            return jdbcTemplate.queryForObject(querry, new Object[]{nickname, nickname},
+        String querry = "SELECT * FROM users WHERE LOWER(users.nickname) = LOWER(?)";
+            return jdbcTemplate.queryForObject(querry, new Object[]{nickname},
                     (rs, rowNum) -> new User(
                             rs.getString("about"),
                             rs.getString("email"),
@@ -60,7 +59,10 @@ public class UserService {
     }
 
     public void updateUser(User user){
-        String querry = "UPDATE users SET about = (?), email = (?), fullname = (?)" +
+        String querry = "UPDATE users " +
+                "SET about = COALESCE(?, about)," +
+                " email = COALESCE(?, email)," +
+                " fullname = COALESCE(?, fullname)" +
                 "WHERE LOWER (nickname) = LOWER(?)";
         jdbcTemplate.update(querry, new Object[]{user.getAbout(),
                 user.getEmail(),
@@ -69,26 +71,27 @@ public class UserService {
     }
 
     public List<User> getForumUsers(String slug, int limit, String since, Boolean desc){
+
+        StringBuilder query = new StringBuilder(
+                "SELECT DISTINCT u.nickname COLLATE \"ucs_basic\", u.fullname, u.email, u.about, LOWER (nickname COLLATE \"ucs_basic\") AS lowNickname" +
+                        " FROM users u " +
+                "LEFT JOIN threads t ON (u.nickname = t.author) " +
+                "LEFT JOIN posts p ON (u.nickname = p.author) " +
+                "JOIN forums f ON (LOWER(f.slug)=LOWER(?) AND (f.slug = t.forum OR f.slug = p.forum)) ");
         ArrayList<Object> arguments = new ArrayList<>();
         arguments.add(slug);
 
-        StringBuilder query = new StringBuilder("SELECT DISTINCT *" +
-                " FROM users" +
-                " LEFT JOIN threads ON threads.author = users.id" +
-                " LEFT JOIN posts ON posts.author = users.nickname" +
-                " JOIN forums ON forums.slug = LOWER (?) AND " +
-                "(forums.slug = threads.forum OR forums.slug = posts.forum)");
         if(since != null) {
-            query.append(" WHERE nickname ");
-            if (desc) {
-                query.append("< ");
+            if (desc == Boolean.TRUE) {
+                query.append(" WHERE LOWER(nickname COLLATE \"ucs_basic\") < LOWER(? COLLATE \"ucs_basic\") ");
             } else {
-                query.append("> ");
+                query.append(" WHERE LOWER(nickname COLLATE \"ucs_basic\") > LOWER(? COLLATE \"ucs_basic\") ");
             }
             arguments.add(since);
-            query.append(" (?)");
         }
-        query.append(" ORDER BY nickname " + (desc ? "DESC " : ""));
+//        query.append(" GROUP BY nickname ");
+        query.append("ORDER BY LOWER(nickname COLLATE \"ucs_basic\") "
+                + (desc == Boolean.TRUE ? "DESC " : ""));
         query.append(" LIMIT ?");
         arguments.add(limit);
         return jdbcTemplate.query(query.toString(), arguments.toArray(), (rs, rowNum) -> {

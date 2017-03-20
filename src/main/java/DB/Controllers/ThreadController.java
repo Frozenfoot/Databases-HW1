@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class ThreadController {
     }
 
     @RequestMapping(
-            value = "{slug_or_id}/create",
+            value = "/create",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -49,25 +50,26 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody List<Post> posts
     ) {
-        int id;
-        ForumThread thread;
+        Integer id = null;
+        ForumThread thread = null;
         Post parent;
         User author;
         try{
+            id = Integer.parseInt(slug);
+            thread = threadService.getThread(id);
+        }
+        catch (NumberFormatException e){
             thread = threadService.getThread(slug);
         }
-        catch (EmptyResultDataAccessException e){
-            id = Integer.parseInt(slug);
-            try{
-                thread = threadService.getThread(id);
-            }
-            catch (EmptyResultDataAccessException e1){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
+        if (thread == null){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         for(Post post : posts){
 
+            if(id != null){
+                post.setThread(id);
+            }
             if(post.getParent() != 0){
                 try{
                     parent = postsService.getPost(post.getParent());
@@ -92,7 +94,11 @@ public class ThreadController {
             }
             postsService.addPost(post, thread);
         }
-        return new ResponseEntity(postsService.getLastPosts(posts.size(), thread), HttpStatus.OK);
+        List<Post> result = postsService.getLastPosts(posts.size(), thread);
+        List<?> shallowCopy = result.subList(0, result.size());
+        Collections.reverse(shallowCopy);
+
+        return new ResponseEntity(result, HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -154,13 +160,21 @@ public class ThreadController {
     public ResponseEntity getPostsInThread(
             @PathVariable("slug_or_id") String slug,
             @RequestParam(value = "limit", required = false, defaultValue = "100"                                                                                                                                                       ) int limit,
-            @RequestParam(value = "marker", required = false) String marker,
+            @RequestParam(value = "marker", required = false, defaultValue = "0") String marker,
             @RequestParam(value = "sort", required = false, defaultValue = "flat") String sort,
             @RequestParam(value = "desc", required = false) Boolean desc
-    ) throws JSONException {
+    ){
         ForumThread thread;
-        JSONObject result = new JSONObject();
         List<Post> posts = null;
+
+        Integer offset = 0;
+        if(marker.matches("\\d+")){
+            offset = Integer.parseInt(marker);
+        }
+        else{
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         try {
              thread = threadService.getThread(slug);
         }
@@ -172,22 +186,25 @@ public class ThreadController {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             }
         }
+
+        int sizeOfOffset = 0;
         switch (sort){
             case "flat":
-                posts = postsService.getFlatPosts(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                posts = postsService.getFlatPosts(thread.getSlug(), limit, offset, desc);
+                sizeOfOffset = posts.size();
                 break;
             case "tree":
-                posts = postsService.getTreePosts(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                posts = postsService.getTreePosts(thread.getSlug(), limit, offset, desc);
+                sizeOfOffset = posts.size();
                 break;
             case "parent_tree":
-                List<Integer> parents = postsService.getParents(thread.getSlug(), limit, Integer.parseInt(marker), desc);
+                List<Integer> parents = postsService.getParents(thread.getSlug(), limit, offset, desc);
                 posts = postsService.getParentTreePosts(thread.getSlug(), parents, desc);
+                sizeOfOffset = parents.size();
                 break;
         }
-        result.put("marker", marker);
-        result.put("posts", posts);
-
-        return new ResponseEntity(result, HttpStatus.OK);
+        offset += sizeOfOffset;
+        return new ResponseEntity(new ThreadPosts(offset.toString(), posts), HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -216,10 +233,11 @@ public class ThreadController {
         }
 
         try {
-            voiceService.addVote(vote, dbThread.getId());
+            int threadId = voiceService.getVote(vote.getNickname(), dbThread.getId());
+            voiceService.changeVote(vote, threadId);
         }
-        catch (DuplicateKeyException e){
-            voiceService.changeVote(vote, dbThread.getId());
+        catch (EmptyResultDataAccessException e){
+            voiceService.addVote(vote, dbThread.getId());
         }
         return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
     }

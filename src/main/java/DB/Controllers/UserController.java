@@ -41,7 +41,6 @@ public class UserController {
               userService.addUser(user);
           }
           catch (DuplicateKeyException e){
-              System.out.println(e.toString());
               return new ResponseEntity<>(userService.getUser(user), HttpStatus.CONFLICT);
           }
           return new ResponseEntity<>(userService.getUser(nickname), HttpStatus.CREATED);
@@ -54,10 +53,9 @@ public class UserController {
     )
     public ResponseEntity getUser(@PathVariable("nickname") String nickname){
           try{
-              return new ResponseEntity<> (userService.getUser(nickname), HttpStatus.ACCEPTED);
+              return new ResponseEntity<> (userService.getUser(nickname), HttpStatus.OK);
           }
           catch (EmptyResultDataAccessException e){
-              System.out.println(e.toString());
               return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
           }
     }
@@ -78,11 +76,9 @@ public class UserController {
             return new ResponseEntity<>(userService.getUser(nickname), HttpStatus.OK);
         }
         catch (EmptyResultDataAccessException e){
-            System.out.println(e.toString());
             return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
         }
         catch (DuplicateKeyException e){
-            System.out.println(e.toString());
             return new ResponseEntity<>("", HttpStatus.CONFLICT);
         }
 

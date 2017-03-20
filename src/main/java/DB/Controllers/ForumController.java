@@ -47,10 +47,8 @@ public class ForumController {
             forumService.addForum(forum);
             return new ResponseEntity<>(forumService.getForum(forum.getSlug()), HttpStatus.CREATED);
         } catch (DuplicateKeyException e) {
-            System.out.println(e.toString());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(forumService.getForum(forum.getSlug()), HttpStatus.CONFLICT);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.toString());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -64,16 +62,26 @@ public class ForumController {
     public ResponseEntity createThread(
             @RequestBody ForumThread thread,
             @PathVariable("slug") String slug) {
+        Forum forum;
         try {
-            thread.setSlug(slug);
-            threadService.addThread(thread);
-            return new ResponseEntity(threadService.getThread(thread.getSlug()), HttpStatus.CREATED);
+            forum = forumService.getForum(slug);
+        }
+        catch (EmptyResultDataAccessException e){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        try {
+            thread.setForum(forum.getSlug());
+            int id = threadService.addThread(thread);
+            ForumThread result = threadService.getThread(id);
+            if (thread.getForum().equals(thread.getSlug())){
+                result.setSlug(null);
+            }
+
+            return new ResponseEntity(result, HttpStatus.CREATED);
         } catch (DuplicateKeyException e) {
-            System.out.println(e.toString());
-            return new ResponseEntity<>(threadService.getThread(thread.getSlug()), HttpStatus.CONFLICT);
+            return new ResponseEntity (threadService.getThread(thread.getSlug()), HttpStatus.CONFLICT);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.toString());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity (HttpStatus.NOT_FOUND);
         }
     }
 
@@ -102,12 +110,13 @@ public class ForumController {
             @RequestParam(value = "desc", required = false) Boolean desc
     ) {
         try{
-            return new ResponseEntity<>(threadService.getThreads(slug, limit, since, desc), HttpStatus.OK);
+            forumService.getForum(slug);
         }
         catch (EmptyResultDataAccessException e){
-            System.out.println(e.toString());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+            List<ForumThread> result = threadService.getThreads(slug, limit, since, desc);
+            return new ResponseEntity (result, HttpStatus.OK);
     }
 
 
@@ -122,11 +131,12 @@ public class ForumController {
             @RequestParam(value = "since", required = false) String since,
             @RequestParam(value = "desc", required = false) Boolean desc
     ) {
+        System.out.println("Slug is: " + slug);
         try{
+            Forum forum = forumService.getForum(slug);
             return new ResponseEntity(userService.getForumUsers(slug, limit, since, desc), HttpStatus.OK);
         }
         catch (EmptyResultDataAccessException e){
-            System.out.println(e.toString());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

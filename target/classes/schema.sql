@@ -8,16 +8,15 @@ CREATE EXTENSION IF NOT EXISTS CITEXT;
 
 CREATE TABLE IF NOT EXISTS users(
   about TEXT,
-  email CITEXT UNIQUE,
+  email CITEXT NOT NULL UNIQUE,
   fullname TEXT,
-  nickname CITEXT PRIMARY KEY
+  nickname CITEXT UNIQUE PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS forums(
-  posts INTEGER DEFAULT 0,
   slug CITEXT PRIMARY KEY NOT NULL,
   title TEXT NOT NULL,
-  user_ CITEXT NOT NULL REFERENCES users(nickname)
+  user_ CITEXT NOT NULL UNIQUE REFERENCES users(nickname)
 );
 
 CREATE TABLE IF NOT EXISTS threads(
@@ -33,7 +32,7 @@ CREATE TABLE IF NOT EXISTS threads(
 CREATE TABLE IF NOT EXISTS votes(
   id SERIAL PRIMARY KEY,
   nickname CITEXT NOT NULL REFERENCES users(nickname),
-  voice INTEGER DEFAULT 0,
+  voice INT,
   thread INT NOT NULL REFERENCES threads(id),
   UNIQUE (thread, nickname)
 );

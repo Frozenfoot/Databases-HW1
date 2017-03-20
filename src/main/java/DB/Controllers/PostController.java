@@ -1,6 +1,7 @@
 package DB.Controllers;
 
 import DB.Models.Post;
+import DB.Models.PostDetails;
 import DB.Services.ForumService;
 import DB.Services.PostsService;
 import DB.Services.ThreadService;
@@ -44,7 +45,7 @@ public class PostController {
     )
     public ResponseEntity getPostDetails(
             @PathVariable("id") int id,
-            @RequestParam("related") ArrayList<String> related) throws JSONException {
+            @RequestParam(value = "related", required = false) ArrayList<String> related) throws JSONException {
 
         Post post;
         try{
@@ -53,22 +54,24 @@ public class PostController {
         catch (EmptyResultDataAccessException e){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        JSONObject result = new JSONObject();
+        PostDetails postDetails = new PostDetails();
+        postDetails.setPost(post);
+
         if(related != null){
 
             if(related.contains("user")){
-                result.put("author", userService.getUser(post.getAuthor()));
+                postDetails.setAuthor(userService.getUser(post.getAuthor()));
             }
 
             if(related.contains("forum")){
-                result.put("forum", forumService.getForum(post.getForum()));
+                postDetails.setForum(forumService.getForum(post.getForum()));
             }
 
             if (related.contains("thread")){
-                result.put("thread", threadService.getThread(post.getThread()));
+                postDetails.setThread(threadService.getThread(post.getThread()));
             }
         }
-        return new ResponseEntity(result, HttpStatus.OK);
+        return new ResponseEntity(postDetails, HttpStatus.OK);
     }
 
     @RequestMapping(
