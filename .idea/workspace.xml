@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d2604e33-d613-428d-b761-960688f2c40f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/DB/Controllers/ThreadController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/DB/Services/PostsService.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/DB/Controllers/PostController.class" afterPath="$PROJECT_DIR$/target/classes/DB/Controllers/PostController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Controllers/ForumController.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Controllers/ForumController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Controllers/PostController.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Controllers/PostController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Controllers/ServiceController.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Controllers/ServiceController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Controllers/UserController.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Controllers/UserController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Models/PostDetails.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Models/PostDetails.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/DB/Services/ThreadService.java" afterPath="$PROJECT_DIR$/src/main/java/DB/Services/ThreadService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/schema.sql" afterPath="$PROJECT_DIR$/src/main/resources/schema.sql" />
-    </list>
+    <list default="true" id="d2604e33-d613-428d-b761-960688f2c40f" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -877,12 +863,12 @@
       <workItem from="1489529495295" duration="2406000" />
       <workItem from="1489532038686" duration="15228000" />
       <workItem from="1489601221034" duration="5379000" />
-      <workItem from="1489608590855" duration="101839000" />
+      <workItem from="1489608590855" duration="102439000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124852000" />
+    <option name="totallyTimeSpent" value="125452000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-5" y="0" width="1376" height="742" extended-state="6" />
@@ -899,7 +885,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34201956" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34201956" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32899022" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
