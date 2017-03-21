@@ -16,31 +16,33 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PostsService.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PostsService.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="107" column="35" lean-forward="false" selection-start-line="107" selection-start-column="35" selection-end-line="107" selection-end-column="35" />
+            <state relative-caret-position="-104">
+              <caret line="209" column="135" lean-forward="false" selection-start-line="209" selection-start-column="135" selection-end-line="209" selection-end-column="135" />
               <folding>
-                <marker date="1490055371173" expanded="true" signature="887:921" ph="SELECT * FRO... posts" />
-                <marker date="1490055371173" expanded="true" signature="1597:1723" ph="INSERT INTO posts... " />
-                <marker date="1490055371173" expanded="true" signature="2772:2810" ph="SELECT forum... threads" />
-                <marker date="1490055371173" expanded="true" signature="2919:3032" ph="INSERT INTO posts... " />
-                <marker date="1490055371173" expanded="true" signature="2919:3045" ph="INSERT INTO posts... " />
-                <marker date="1490055371173" expanded="true" signature="3500:3619" ph="UPDATE posts... " />
-                <marker date="1490055371173" expanded="true" signature="3794:3964" ph="SELECT DISTI... posts" />
-                <marker date="1490055371173" expanded="true" signature="4786:5127" ph="SELECT * FRO... posts" />
-                <marker date="1490055371173" expanded="true" signature="8023:8299" ph="SELECT posts... posts" />
+                <marker date="1490058912897" expanded="true" signature="887:921" ph="SELECT * FRO... posts" />
+                <marker date="1490058912897" expanded="true" signature="1597:1723" ph="INSERT INTO posts... " />
+                <marker date="1490058912897" expanded="true" signature="2772:2810" ph="SELECT forum... threads" />
+                <marker date="1490058912897" expanded="true" signature="2919:3032" ph="INSERT INTO posts... " />
+                <marker date="1490058912897" expanded="true" signature="2919:3045" ph="INSERT INTO posts... " />
+                <marker date="1490058912897" expanded="true" signature="3500:3619" ph="UPDATE posts... " />
+                <marker date="1490058912897" expanded="true" signature="3794:3964" ph="SELECT DISTI... posts" />
+                <marker date="1490058912897" expanded="true" signature="4786:5120" ph="SELECT * FRO... posts" />
+                <marker date="1490058912897" expanded="true" signature="4786:5170" ph="SELECT * FRO... posts" />
+                <marker date="1490058912897" expanded="true" signature="4786:5198" ph="SELECT * FRO... posts" />
+                <marker date="1490058912897" expanded="true" signature="8146:8407" ph="SELECT posts... posts" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ThreadController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ThreadController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="110" column="39" lean-forward="false" selection-start-line="110" selection-start-column="39" selection-end-line="110" selection-end-column="39" />
+            <state relative-caret-position="288">
+              <caret line="230" column="103" lean-forward="false" selection-start-line="230" selection-start-column="103" selection-end-line="230" selection-end-column="103" />
               <folding />
             </state>
           </provider>
@@ -53,6 +55,7 @@
       <find>returni</find>
       <find>returning</find>
       <find>returnin</find>
+      <find>?</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -63,8 +66,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java" />
       </list>
     </option>
   </component>
@@ -661,15 +664,15 @@
       <updated>1489977622122</updated>
       <workItem from="1489977628020" duration="274000" />
       <workItem from="1489980949297" duration="132000" />
-      <workItem from="1489981318355" duration="7190000" />
+      <workItem from="1489981318355" duration="10176000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7596000" />
+    <option name="totallyTimeSpent" value="10582000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-5" y="0" width="1376" height="742" extended-state="7" />
+    <frame x="-5" y="0" width="1376" height="742" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -683,7 +686,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31707317" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3284553" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -869,29 +872,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="107" column="35" lean-forward="false" selection-start-line="107" selection-start-column="35" selection-end-line="107" selection-end-column="35" />
-          <folding>
-            <marker date="1490055371173" expanded="true" signature="887:921" ph="SELECT * FRO... posts" />
-            <marker date="1490055371173" expanded="true" signature="1597:1723" ph="INSERT INTO posts... " />
-            <marker date="1490055371173" expanded="true" signature="2772:2810" ph="SELECT forum... threads" />
-            <marker date="1490055371173" expanded="true" signature="2919:3032" ph="INSERT INTO posts... " />
-            <marker date="1490055371173" expanded="true" signature="2919:3045" ph="INSERT INTO posts... " />
-            <marker date="1490055371173" expanded="true" signature="3500:3619" ph="UPDATE posts... " />
-            <marker date="1490055371173" expanded="true" signature="3794:3964" ph="SELECT DISTI... posts" />
-            <marker date="1490055371173" expanded="true" signature="4786:5127" ph="SELECT * FRO... posts" />
-            <marker date="1490055371173" expanded="true" signature="8023:8299" ph="SELECT posts... posts" />
-          </folding>
+        <state relative-caret-position="288">
+          <caret line="230" column="103" lean-forward="false" selection-start-line="230" selection-start-column="103" selection-end-line="230" selection-end-column="103" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="110" column="39" lean-forward="false" selection-start-line="110" selection-start-column="39" selection-end-line="110" selection-end-column="39" />
-          <folding />
+        <state relative-caret-position="-104">
+          <caret line="209" column="135" lean-forward="false" selection-start-line="209" selection-start-column="135" selection-end-line="209" selection-end-column="135" />
+          <folding>
+            <marker date="1490058912897" expanded="true" signature="887:921" ph="SELECT * FRO... posts" />
+            <marker date="1490058912897" expanded="true" signature="1597:1723" ph="INSERT INTO posts... " />
+            <marker date="1490058912897" expanded="true" signature="2772:2810" ph="SELECT forum... threads" />
+            <marker date="1490058912897" expanded="true" signature="2919:3032" ph="INSERT INTO posts... " />
+            <marker date="1490058912897" expanded="true" signature="2919:3045" ph="INSERT INTO posts... " />
+            <marker date="1490058912897" expanded="true" signature="3500:3619" ph="UPDATE posts... " />
+            <marker date="1490058912897" expanded="true" signature="3794:3964" ph="SELECT DISTI... posts" />
+            <marker date="1490058912897" expanded="true" signature="4786:5120" ph="SELECT * FRO... posts" />
+            <marker date="1490058912897" expanded="true" signature="4786:5170" ph="SELECT * FRO... posts" />
+            <marker date="1490058912897" expanded="true" signature="4786:5198" ph="SELECT * FRO... posts" />
+            <marker date="1490058912897" expanded="true" signature="8146:8407" ph="SELECT posts... posts" />
+          </folding>
         </state>
       </provider>
     </entry>

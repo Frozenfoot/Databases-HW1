@@ -129,7 +129,8 @@ public class PostsService {
                 " JOIN threads ON (threads.id = posts.thread AND threads.slug = ?)" +
                 " JOIN forums ON threads.forum = forums.slug" +
                 " JOIN users ON posts.author = users.nickname " +
-                " ORDER BY posts.created " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
+                " ORDER BY posts.created " + (desc == Boolean.TRUE ? "DESC" : "") + ", posts.id " +
+                (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query,
                 (rs, rowNum) -> {
                     Post post = new Post(
@@ -159,12 +160,13 @@ public class PostsService {
                         " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
                         " FROM posts p " +
                         " JOIN tree ON tree.id = p.parent) " +
-                        " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
+                        " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, _posts_" +
                         " AS _posts_ FROM tree tr " +
                         " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
                         " JOIN forums f ON (t.forum = f.slug) " +
                         " JOIN users u ON (u.nickname = tr.author) " +
-                        " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
+                        " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + ", id " +
+                         (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(
                 query,
                 (rs, rowNum) -> {
@@ -186,13 +188,13 @@ public class PostsService {
         );
     }
 
-    public List<Integer> getParents(String slug, int limit, int pageId, Boolean desc){
+    public List<Integer> getParents(String slug, int limit, int offset, Boolean desc){
         String query =
-                " SELECT posts.id FROM posts " +
-                        " JOIN threads ON threads.id = posts.thread " +
-                        " WHERE parent = 0 AND threads.slug = ? " +
-                        " ORDER BY posts.id " + (desc == Boolean.TRUE ? "DESC " : "") + "LIMIT ? OFFSET ?";
-        return jdbcTemplate.queryForList(query, new Object[]{slug, limit, pageId}, Integer.class);
+                " SELECT p.id FROM posts p " +
+                        " JOIN threads t ON t.id = p.thread " +
+                        " WHERE parent = 0 AND t.slug = ? " +
+                        " ORDER BY p.id " + (desc == Boolean.TRUE ? "DESC " : "") + ", id LIMIT ? OFFSET ?;";
+        return jdbcTemplate.queryForList(query, new Object[]{slug, limit, offset}, Integer.class);
     }
 
     public List<Post> getParentTreePosts(String slug, List<Integer> parents, Boolean desc){
@@ -205,12 +207,13 @@ public class PostsService {
                 " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
                 " FROM posts p " +
                 " JOIN tree ON tree.id = p.parent) " +
-                " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, array_to_string(_posts_, ' ')" +
+                " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, _posts_ " +
                 " AS _posts_ FROM tree tr " +
                 " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
                 " JOIN forums f ON (t.forum = f.slug) " +
                 " JOIN users u ON (u.nickname = tr.author) " +
-                " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "");
+                " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + ", id " +
+                (desc == Boolean.TRUE ? "DESC" : "");
         for (Integer parentId : parents){
             result.addAll(jdbcTemplate.query(
                     query,
