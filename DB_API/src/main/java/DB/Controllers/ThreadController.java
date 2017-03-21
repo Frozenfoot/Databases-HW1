@@ -5,6 +5,7 @@ import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
 import DB.Services.VoiceService;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,12 +14,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by frozenfoot on 15.03.17.
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("api/thread/{slug_or_id}")
 public class ThreadController {
@@ -92,17 +95,20 @@ public class ThreadController {
             catch (EmptyResultDataAccessException e){
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             }
-
-            if(post.getCreated() == null){
-                post.setCreated(LocalDateTime.now().toString());
-            }
-            postsService.addPost(post, thread);
         }
-        List<Post> result = postsService.getLastPosts(posts.size(), thread);
-        List<?> shallowCopy = result.subList(0, result.size());
-        Collections.reverse(shallowCopy);
 
-        return new ResponseEntity(result, HttpStatus.CREATED);
+        try{
+            postsService.addPosts(posts, thread);
+        }
+        catch (DuplicateKeyException e){
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+
+        List<Post> result = postsService.getLastPosts(posts.size(), thread);
+//        List<?> shallowCopy = result.subList(0, result.size());
+//        Collections.reverse(shallowCopy);
+
+        return new ResponseEntity(posts, HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -164,6 +170,7 @@ public class ThreadController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         threadService.changeThread(thread, dbThread.getId());
+
         return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
     }
 

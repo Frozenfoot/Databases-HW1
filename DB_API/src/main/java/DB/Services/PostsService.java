@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +48,45 @@ public class PostsService {
         });
     }
 
-    public void addPost(Post post, ForumThread thread){
+    public void addPosts(List<Post> posts, ForumThread thread){
+        String query = "INSERT INTO posts (author, created, forum, message, parent, thread)" +
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        int id;
+        LocalDateTime now = LocalDateTime.now();
+
+        for(Post post : posts){
+            Timestamp time;
+            time = (post.getCreated() == null ?
+                    Timestamp.valueOf(LocalDateTime.parse(now.toString(), DateTimeFormatter.ISO_DATE_TIME))
+                    : Timestamp.valueOf(LocalDateTime.parse(post.getCreated(), DateTimeFormatter.ISO_DATE_TIME)));
+
+            id = jdbcTemplate.queryForObject(
+                    query,
+                    Integer.class,
+                    post.getAuthor(),
+                    time,
+                    thread.getForum(),
+                    post.getMessage(),
+                    post.getParent(),
+                    thread.getId()
+            );
+            post.setId(id);
+            post.setThread(thread.getId());
+            post.setForum(thread.getForum());
+            post.setCreated(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(time));
+        }
+    }
+
+    public int addPost(Post post, ForumThread thread){
         String query = "SELECT forum FROM threads WHERE id = ?";
         String forum = jdbcTemplate.queryForObject(query, String.class, thread.getId());
         query = "INSERT INTO posts (author, created, forum, message, parent, thread)" +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        return jdbcTemplate.queryForObject(
                 query,
+                Integer.class,
                 post.getAuthor(),
-                Timestamp.valueOf(LocalDateTime.parse(post.getCreated())),
+                Timestamp.valueOf(LocalDateTime.parse(post.getCreated(), DateTimeFormatter.ISO_DATE_TIME)),
                 forum,
                 post.getMessage(),
                 post.getParent(),
@@ -74,7 +105,7 @@ public class PostsService {
         String query = "SELECT DISTINCT *" +
                 " FROM posts" +
                 " WHERE posts.thread = ?" +
-                " ORDER BY id" +
+                " ORDER BY created, id " +
                 " DESC LIMIT ?";
         return jdbcTemplate.query(query,(rs, rowNum) -> {
                     Post post = new Post(
