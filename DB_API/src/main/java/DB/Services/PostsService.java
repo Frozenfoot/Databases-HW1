@@ -6,7 +6,6 @@ import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +52,11 @@ public class PostsService {
 
     public List<Post> addPosts(List<Post> posts, ForumThread thread, List<Integer[]> paths) throws SQLException {
         String query = "INSERT INTO posts (author, created, forum, message, parent, thread, id, array_for_tree)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, array_append(?, ?)) RETURNING id";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, array_append(?, ?))";
         Timestamp now = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-        try(Connection connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource())) {
+        try(Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.NO_GENERATED_KEYS);
             PreparedStatement forumUsersStatement = connection.prepareStatement(
                     "INSERT INTO users_in_forum (user_, forum_slug) " +
