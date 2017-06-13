@@ -17,22 +17,19 @@ public class VoiceService {
     }
 
     public void addVote(Vote vote, int threadId){
-        String query = "INSERT INTO votes (nickname, voice, thread)" +
-                "VALUES (?, ?, ?)";
+        String query =
+                "INSERT INTO votes (nickname, voice, thread) " +
+                "VALUES (?, ?, ?) " +
+                "ON CONFLICT (nickname, thread) DO UPDATE SET voice = EXCLUDED.voice";
         jdbcTemplate.update(query, vote.getNickname(), vote.getVoice(), threadId);
-
-    }
-
-    public void changeVote(Vote vote, int id){
-        String query = "UPDATE votes SET voice = (?) " +
-                "WHERE id =  (?)";
-        jdbcTemplate.update(query, vote.getVoice(), id);
-    }
-
-    public int getVote(String nickname, int threadId){
-        String query = "SELECT id " +
-                "FROM votes " +
-                "WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
-        return jdbcTemplate.queryForObject(query, Integer.class, nickname, threadId);
+        query =
+                "UPDATE threads " +
+                "SET votes = (" +
+                        "SELECT SUM(voice) " +
+                        "FROM votes " +
+                        "WHERE (thread) = (?)" +
+                        ")" +
+                        "WHERE id = (?)";
+        jdbcTemplate.update(query, threadId, threadId);
     }
 }

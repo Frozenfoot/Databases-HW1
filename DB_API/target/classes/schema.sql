@@ -14,9 +14,12 @@ CREATE TABLE IF NOT EXISTS users(
 );
 
 CREATE TABLE IF NOT EXISTS forums(
-  slug CITEXT PRIMARY KEY NOT NULL,
+  id SERIAL NOT NULL PRIMARY KEY,
+  posts BIGINT DEFAULT 0 NOT NULL,
+  threads BIGINT DEFAULT 0 NOT NULL,
+  slug CITEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
-  user_ CITEXT NOT NULL UNIQUE REFERENCES users(nickname)
+  user_ CITEXT NOT NULL REFERENCES users(nickname)
 );
 
 CREATE TABLE IF NOT EXISTS threads(
@@ -26,14 +29,14 @@ CREATE TABLE IF NOT EXISTS threads(
   id SERIAL PRIMARY KEY,
   message TEXT,
   slug CITEXT UNIQUE,
-  title TEXT NOT NULL
+  title TEXT NOT NULL,
+  votes BIGINT DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS votes(
-  id SERIAL PRIMARY KEY,
+  thread INTEGER NOT NULL,
+  voice INTEGER NOT NULL,
   nickname CITEXT NOT NULL REFERENCES users(nickname),
-  voice INT,
-  thread INT NOT NULL REFERENCES threads(id),
   UNIQUE (thread, nickname)
 );
 
@@ -45,6 +48,11 @@ CREATE TABLE IF NOT EXISTS posts(
   isEdited BOOLEAN DEFAULT FALSE,
   message TEXT NOT NULL ,
   parent INTEGER DEFAULT 0,
-  thread INTEGER REFERENCES threads(id)
+  thread INTEGER REFERENCES threads(id),
+  array_for_tree INTEGER[]
 );
 
+CREATE TABLE IF NOT EXISTS users_in_forum (
+  user_ CITEXT NOT NULL,
+  forum_slug CITEXT NOT NULL
+);

@@ -1,18 +1,9 @@
 package DB.Services;
 
-import DB.Models.ForumThread;
 import DB.Models.User;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,23 +64,24 @@ public class UserService {
     public List<User> getForumUsers(String slug, int limit, String since, Boolean desc){
 
         StringBuilder query = new StringBuilder(
-                "SELECT DISTINCT u.nickname COLLATE \"ucs_basic\", u.fullname, u.email, u.about, LOWER (nickname COLLATE \"ucs_basic\") AS lowNickname" +
-                        " FROM users u " +
-                "LEFT JOIN threads t ON (u.nickname = t.author) " +
-                "LEFT JOIN posts p ON (u.nickname = p.author) " +
-                "JOIN forums f ON (LOWER(f.slug)=LOWER(?) AND (f.slug = t.forum OR f.slug = p.forum)) ");
+                "SELECT * " +
+                        "FROM users " +
+                        "WHERE nickname IN (" +
+                        "   SELECT user_ " +
+                        "   FROM users_in_forum " +
+                        "   WHERE LOWER (forum_slug) = LOWER(?)) "
+        );
         ArrayList<Object> arguments = new ArrayList<>();
         arguments.add(slug);
 
         if(since != null) {
             if (desc == Boolean.TRUE) {
-                query.append(" WHERE LOWER(nickname COLLATE \"ucs_basic\") < LOWER(? COLLATE \"ucs_basic\") ");
+                query.append(" AND LOWER(nickname COLLATE \"ucs_basic\") < LOWER(? COLLATE \"ucs_basic\") ");
             } else {
-                query.append(" WHERE LOWER(nickname COLLATE \"ucs_basic\") > LOWER(? COLLATE \"ucs_basic\") ");
+                query.append(" AND LOWER(nickname COLLATE \"ucs_basic\") > LOWER(? COLLATE \"ucs_basic\") ");
             }
             arguments.add(since);
         }
-//        query.append(" GROUP BY nickname ");
         query.append("ORDER BY LOWER(nickname COLLATE \"ucs_basic\") "
                 + (desc == Boolean.TRUE ? "DESC " : ""));
         query.append(" LIMIT ?");

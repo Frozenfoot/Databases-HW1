@@ -6,8 +6,6 @@ import DB.Services.ForumService;
 import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,16 +52,6 @@ public class PostController {
         catch (EmptyResultDataAccessException e){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-
-        System.out.println(
-                "PostDetails:\nauthor: " + post.getAuthor() +
-                "\ncreated: " + post.getCreated() +
-                "\nforum: " + post.getCreated() +
-                "\nid: " + post.getId() +
-                "\nisEdited: " + post.getIsEdited() +
-                "\nmessage: " + post.getMessage() +
-                "\nparent: " + post.getParent() +
-                "\nthread: " + post.getThread());
 
         PostDetails postDetails = new PostDetails();
         postDetails.setPost(post);

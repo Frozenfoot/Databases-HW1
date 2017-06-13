@@ -5,6 +5,7 @@ import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
 import DB.Services.VoiceService;
+import javafx.util.Pair;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by frozenfoot on 15.03.17.
@@ -72,21 +73,22 @@ public class ThreadController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        for(Post post : posts){
+        List<Pair<Integer, Integer[]>> children = postsService.getChildren(thread.getId());
+        List<Integer[]> paths = new ArrayList<>();
 
-            if(id != null){
-                post.setThread(id);
+        for(Post post : posts){
+            int parentID = post.getParent();
+            if(parentID != 0){
+                final Optional<Pair<Integer, Integer[]>> optional = children.stream().filter(e -> e.getKey() == parentID).findFirst();
+                if(!optional.isPresent()){
+                    return new ResponseEntity(HttpStatus.CONFLICT);
+                }
+                else {
+                    paths.add(optional.get().getValue());
+                }
             }
-            if(post.getParent() != 0){
-                try{
-                    parent = postsService.getPost(post.getParent());
-                }
-                catch (EmptyResultDataAccessException e){
-                    return new ResponseEntity(HttpStatus.CONFLICT);
-                }
-                if(parent.getThread() != thread.getId()){
-                    return new ResponseEntity(HttpStatus.CONFLICT);
-                }
+            else {
+                paths.add(null);
             }
 
             try{
@@ -98,15 +100,12 @@ public class ThreadController {
         }
 
         try{
-            postsService.addPosts(posts, thread);
+            postsService.addPosts(posts, thread, paths);
         }
         catch (DuplicateKeyException e){
             return new ResponseEntity(HttpStatus.CONFLICT);
+        } catch (SQLException e) {
         }
-
-        List<Post> result = postsService.getLastPosts(posts.size(), thread);
-//        List<?> shallowCopy = result.subList(0, result.size());
-//        Collections.reverse(shallowCopy);
 
         return new ResponseEntity(posts, HttpStatus.CREATED);
     }
@@ -180,23 +179,16 @@ public class ThreadController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getPostsInThread(
-            @PathVariable("slug_or_id") String slug,
-            @RequestParam(value = "limit", required = false, defaultValue = "100"                                                                                                                                                       ) int limit,
-            @RequestParam(value = "marker", required = false, defaultValue = "0") String marker,
-            @RequestParam(value = "sort", required = false, defaultValue = "flat") String sort,
-            @RequestParam(value = "desc", required = false) Boolean desc
-    ){
+            @PathVariable(name = "slug_or_id") String slug,
+            @RequestParam(name = "limit", required = false, defaultValue = "0") final Integer limit,
+            @RequestParam(name = "marker", required = false, defaultValue = "0") final Integer marker,
+            @RequestParam(name = "sort", required = false, defaultValue = "flat") final String sort,
+            @RequestParam(name = "desc", required = false, defaultValue = "false") final Boolean desc
+    )
+    {
         ForumThread thread;
-        List<Post> posts = null;
 
-        Integer offset = 0;
         Integer id = null;
-        if(marker.matches("\\d+")){
-            offset = Integer.parseInt(marker);
-        }
-        else{
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
 
         try {
              id = Integer.parseInt(slug);
@@ -217,23 +209,24 @@ public class ThreadController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        int sizeOfOffset = 0;
+        Integer offset = marker == null ? 0 : marker;
+        List<Post> posts = new ArrayList<>();
+
         switch (sort){
             case "flat":
-                posts = postsService.getFlatPosts(thread.getSlug(), limit, offset, desc);
-                sizeOfOffset = posts.size();
+                posts = postsService.getFlatPosts(thread.getId(), limit, offset, desc);
+                offset += posts.size();
                 break;
             case "tree":
-                posts = postsService.getTreePosts(thread.getSlug(), limit, offset, desc);
-                sizeOfOffset = posts.size();
+                posts = postsService.getTreePosts(thread.getId(), limit, offset, desc);
+                offset += posts.size();
                 break;
             case "parent_tree":
-                List<Integer> parents = postsService.getParents(thread.getSlug(), limit, offset, desc);
-                posts = postsService.getParentTreePosts(thread.getSlug(), parents, desc);
-                sizeOfOffset = parents.size();
+                List<Integer> parents = postsService.getParents(thread.getId(), limit, offset, desc);
+                posts = postsService.getParentTreePosts(thread.getId(), parents, desc);
+                offset += posts.size();
                 break;
         }
-        offset += sizeOfOffset;
         return new ResponseEntity(new ThreadPosts(offset.toString(), posts), HttpStatus.OK);
     }
 
@@ -275,13 +268,8 @@ public class ThreadController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        try {
-            int threadId = voiceService.getVote(vote.getNickname(), dbThread.getId());
-            voiceService.changeVote(vote, threadId);
-        }
-        catch (EmptyResultDataAccessException e){
-            voiceService.addVote(vote, dbThread.getId());
-        }
+        voiceService.addVote(vote, dbThread.getId());
+
         return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
     }
 }

@@ -36,7 +36,6 @@ public class ForumThread {
         this.slug = slug;
         this.title = title;
         this.votes = votes;
-
     }
 
     public void setAuthor(String author) {

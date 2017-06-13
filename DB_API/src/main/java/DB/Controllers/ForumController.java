@@ -2,7 +2,6 @@ package DB.Controllers;
 
 import DB.Models.Forum;
 import DB.Models.ForumThread;
-import DB.Models.User;
 import DB.Services.ForumService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
@@ -45,12 +44,12 @@ public class ForumController {
     public ResponseEntity createForum(@RequestBody Forum forum) {
         try {
             forumService.addForum(forum);
-            return new ResponseEntity<>(forumService.getForum(forum.getSlug()), HttpStatus.CREATED);
         } catch (DuplicateKeyException e) {
             return new ResponseEntity<>(forumService.getForum(forum.getSlug()), HttpStatus.CONFLICT);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(forumService.getForum(forum.getSlug()), HttpStatus.CREATED);
     }
 
 
@@ -131,7 +130,6 @@ public class ForumController {
             @RequestParam(value = "since", required = false) String since,
             @RequestParam(value = "desc", required = false) Boolean desc
     ) {
-        System.out.println("Slug is: " + slug);
         try{
             Forum forum = forumService.getForum(slug);
             return new ResponseEntity(userService.getForumUsers(slug, limit, since, desc), HttpStatus.OK);

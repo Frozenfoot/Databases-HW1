@@ -2,17 +2,16 @@ package DB.Services;
 
 import DB.Models.ForumThread;
 import DB.Models.Post;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,11 @@ import java.util.List;
  * Created by frozenfoot on 18.03.17.
  */
 @Service
+@Transactional
 public class PostsService {
     @Autowired
     JdbcTemplate jdbcTemplate;
+    private static final RowMapper<Integer> parentMapper = (rs, num) -> rs.getInt("id");
 
     public PostsService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -48,50 +49,58 @@ public class PostsService {
         });
     }
 
-    public void addPosts(List<Post> posts, ForumThread thread){
-        String query = "INSERT INTO posts (author, created, forum, message, parent, thread)" +
-                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
-        int id;
-        LocalDateTime now = LocalDateTime.now();
-
-        for(Post post : posts){
-            Timestamp time;
-            time = (post.getCreated() == null ?
-                    Timestamp.valueOf(LocalDateTime.parse(now.toString(), DateTimeFormatter.ISO_DATE_TIME))
-                    : Timestamp.valueOf(LocalDateTime.parse(post.getCreated(), DateTimeFormatter.ISO_DATE_TIME)));
-
-            id = jdbcTemplate.queryForObject(
-                    query,
-                    Integer.class,
-                    post.getAuthor(),
-                    time,
-                    thread.getForum(),
-                    post.getMessage(),
-                    post.getParent(),
-                    thread.getId()
-            );
-            post.setId(id);
-            post.setThread(thread.getId());
-            post.setForum(thread.getForum());
-            post.setCreated(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(time));
-        }
+    public List<Pair<Integer, Integer[]>> getChildren(Integer thread){
+        String query = "SELECT id, array_for_tree FROM posts WHERE thread = (?)";
+        return jdbcTemplate.query(query, (rs, rowNum) -> new Pair(rs.getInt("id"), (Integer[])rs.getArray("array_for_tree").getArray()), thread);
     }
 
-    public int addPost(Post post, ForumThread thread){
-        String query = "SELECT forum FROM threads WHERE id = ?";
-        String forum = jdbcTemplate.queryForObject(query, String.class, thread.getId());
-        query = "INSERT INTO posts (author, created, forum, message, parent, thread)" +
-                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
-        return jdbcTemplate.queryForObject(
-                query,
-                Integer.class,
-                post.getAuthor(),
-                Timestamp.valueOf(LocalDateTime.parse(post.getCreated(), DateTimeFormatter.ISO_DATE_TIME)),
-                forum,
-                post.getMessage(),
-                post.getParent(),
-                thread.getId()
-        );
+    public List<Post> addPosts(List<Post> posts, ForumThread thread, List<Integer[]> paths) throws SQLException {
+        String query = "INSERT INTO posts (author, created, forum, message, parent, thread, id, array_for_tree)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, array_append(?, ?)) RETURNING id";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+        try(Connection connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource())) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.NO_GENERATED_KEYS);
+            PreparedStatement forumUsersStatement = connection.prepareStatement(
+                    "INSERT INTO users_in_forum (user_, forum_slug) " +
+                            "VALUES  (?, ?)", Statement.NO_GENERATED_KEYS);
+            List<Integer> listOfId = jdbcTemplate.queryForList("SELECT nextval('posts_id_seq') from generate_series(1, ?)", Integer.class, posts.size());
+            int i = 0;
+            int currentId;
+            for (Post post : posts) {
+                if(paths.get(i) == null){
+                    preparedStatement.setArray(8, null);
+                }
+                else{
+                    preparedStatement.setArray(8, connection.createArrayOf("INT", paths.get(i)));
+                }
+                currentId = listOfId.get(i++);
+                post.setId(currentId);
+                post.setCreated(dateFormat.format(now));
+                post.setForum(thread.getForum());
+                post.setThread(thread.getId());
+                preparedStatement.setString(1, post.getAuthor());
+                preparedStatement.setTimestamp(2, now);
+                preparedStatement.setString(3, thread.getForum());
+                preparedStatement.setString(4, post.getMessage());
+                preparedStatement.setInt(5, post.getParent());
+                preparedStatement.setInt(6, post.getThread());
+                preparedStatement.setInt(7, currentId);
+                preparedStatement.setInt(9, currentId);
+
+                forumUsersStatement.setString(1, post.getAuthor());
+                forumUsersStatement.setString(2, post.getForum());
+                forumUsersStatement.addBatch();
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            forumUsersStatement.executeBatch();
+
+        }
+        catch(SQLException e){return null;}
+        jdbcTemplate.update("UPDATE forums SET posts = posts + (?) WHERE LOWER(slug) = (?)", posts.size(), thread.getForum());
+        return posts;
     }
 
     public void changePost(Post post, int id){
@@ -101,34 +110,9 @@ public class PostsService {
         jdbcTemplate.update(query, new Object[]{post.getMessage(), id});
     }
 
-    public List<Post> getLastPosts(int length, ForumThread thread){
-        String query = "SELECT DISTINCT *" +
-                " FROM posts" +
-                " WHERE posts.thread = ?" +
-                " ORDER BY created, id " +
-                " DESC LIMIT ?";
-        return jdbcTemplate.query(query,(rs, rowNum) -> {
-                    Post post = new Post(
-                            rs.getString("author"),
-                            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(rs.getTimestamp("created")),
-                            rs.getString("forum"),
-                            rs.getInt("id"),
-                            rs.getBoolean("isEdited"),
-                            rs.getString("message"),
-                            rs.getInt("parent"),
-                            rs.getInt("thread")
-                    );
-                    return post;
-                },
-                thread.getId(),
-                length);
-    }
-
-    public List<Post> getFlatPosts(String slug, int limit, int pageId, Boolean desc){
+    public List<Post> getFlatPosts(Integer threadId, int limit, int offset, Boolean desc){
         String query = "SELECT * FROM posts" +
-                " JOIN threads ON (threads.id = posts.thread AND threads.slug = ?)" +
-                " JOIN forums ON threads.forum = forums.slug" +
-                " JOIN users ON posts.author = users.nickname " +
+                " WHERE thread = (?) " +
                 " ORDER BY posts.created " + (desc == Boolean.TRUE ? "DESC" : "") + ", posts.id " +
                 (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query,
@@ -145,75 +129,80 @@ public class PostsService {
                     );
                     return post;
                 },
-                slug,
+                threadId,
                 limit,
-                pageId);
+                offset);
     }
 
-    public List<Post> getTreePosts(String slug, int limit, int pageId, Boolean desc){
-        String query =
-                "WITH RECURSIVE tree (author, created, forum, id, isEdited, message, parent, thread, _posts_)" +
-                        " AS (" +
-                        " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
-                        " FROM posts WHERE parent = 0 " +
-                        " UNION ALL " +
-                        " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
-                        " FROM posts p " +
-                        " JOIN tree ON tree.id = p.parent) " +
-                        " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, _posts_" +
-                        " AS _posts_ FROM tree tr " +
-                        " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
-                        " JOIN forums f ON (t.forum = f.slug) " +
-                        " JOIN users u ON (u.nickname = tr.author) " +
-                        " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + ", id " +
-                         (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(
-                query,
-                (rs, rowNum) -> {
-                    Post post = new Post(
-                            rs.getString("author"),
-                            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(rs.getTimestamp("created")),
-                            rs.getString("forum"),
-                            rs.getInt("id"),
-                            rs.getBoolean("isEdited"),
-                            rs.getString("message"),
-                            rs.getInt("parent"),
-                            rs.getInt("thread")
-                    );
-                    return post;
+    public List<Post> getTreePosts(Integer threadId, int limit, int offset, Boolean desc){
+
+        String query = "SELECT * " +
+                " FROM posts " +
+                " WHERE thread = (?) " +
+                " ORDER BY array_for_tree " + (desc == Boolean.TRUE ? "DESC" : "") +
+                " LIMIT ? OFFSET ?";
+//
+//        String tempQuery =
+//                "WITH RECURSIVE recursetree (author, created, forum, id, isEdited, message, parent, thread, path) AS (" +
+//                            "SELECT posts.*, array_append('{}'::int[], id) FROM posts " +
+//                            "WHERE parent = 0 " +
+//                            "AND thread = (?) " +
+//                        " UNION ALL " +
+//                        "   SELECT p.*, array_append(path, p.id)" +
+//                        "   FROM posts AS p" +
+//                        "   JOIN recursetree rt ON rt.id = p.parent" +
+//                        ")" +
+//                        " SELECT rt.*, array_to_string(path, '.') as path1 " +
+//                        "FROM recursetree AS rt " +
+//                        "ORDER BY path " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, (rs, rowNum) -> {
+            Post post = new Post(
+                    rs.getString("author"),
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(rs.getTimestamp("created")),
+                    rs.getString("forum"),
+                    rs.getInt("id"),
+                    rs.getBoolean("isEdited"),
+                    rs.getString("message"),
+                    rs.getInt("parent"),
+                    rs.getInt("thread")
+            );
+            return post;
                 },
-                slug,
+                threadId,
                 limit,
-                pageId
-        );
+                offset
+                );
     }
 
-    public List<Integer> getParents(String slug, int limit, int offset, Boolean desc){
+    public List<Integer> getParents(Integer threadId, int limit, int offset, Boolean desc){
         String query =
-                " SELECT p.id FROM posts p " +
-                        " JOIN threads t ON t.id = p.thread " +
-                        " WHERE parent = 0 AND t.slug = ? " +
-                        " ORDER BY p.id " + (desc == Boolean.TRUE ? "DESC " : "") + ", id LIMIT ? OFFSET ?;";
-        return jdbcTemplate.queryForList(query, new Object[]{slug, limit, offset}, Integer.class);
+                " SELECT id FROM posts " +
+                        " WHERE parent = 0 AND thread = (?) " +
+                        " ORDER BY id " + (desc == Boolean.TRUE ? "DESC " : "") + " LIMIT ? OFFSET ?;";
+        return jdbcTemplate.query(query, parentMapper, threadId, limit, offset);
     }
 
-    public List<Post> getParentTreePosts(String slug, List<Integer> parents, Boolean desc){
+    public List<Post> getParentTreePosts(Integer threadId, List<Integer> parents, Boolean desc){
+//        String query =
+//                "WITH RECURSIVE recursetree (author, created, forum, id, isEdited, message, parent, thread, path) AS (" +
+//                "(SELECT posts.*, array_append('{}'::INT[], id) FROM posts " +
+//                " WHERE parent = 0 " +
+//                "AND thread = (?) " +
+//                " ORDER BY id )" +
+//                " UNION ALL" +
+//                " SELECT p.*, array_append(path, p.id) " +
+//                " FROM posts AS p " +
+//                " JOIN recursetree rt ON rt.id = p.parent )" +
+//                " SELECT rt.*, array_to_string(path, '.') AS path1 " +
+//                " FROM recursetree AS rt " +
+//                " ORDER BY path";
+        String query =
+                "SELECT * " +
+                "FROM posts " +
+                "WHERE thread = (?) AND array_for_tree[1] = (?) " +
+                "ORDER BY array_for_tree " + (desc == Boolean.TRUE ? "DESC" : "") + ", id " + (desc == Boolean.TRUE ? "DESC" : "");
         List<Post> result = new ArrayList<>();
-        String query =  "WITH RECURSIVE tree (author, created, forum, id, isEdited, message, parent, thread, _posts_)" +
-                " AS (" +
-                " SELECT author, created, forum, id, isEdited, message, parent, thread, array[id] " +
-                " FROM posts WHERE id = ? " +
-                " UNION ALL " +
-                " SELECT p.author, p.created, p.forum, p.id, p.isEdited, p.message, p.parent, p.thread, array_append(_posts_, p.id)" +
-                " FROM posts p " +
-                " JOIN tree ON tree.id = p.parent) " +
-                " SELECT tr.id, tr.author, tr.forum, nickname, tr.created, f.slug, isEdited, tr.message, tr.parent, tr.thread, _posts_ " +
-                " AS _posts_ FROM tree tr " +
-                " JOIN threads t ON (tr.thread = t.id AND t.slug = ?) " +
-                " JOIN forums f ON (t.forum = f.slug) " +
-                " JOIN users u ON (u.nickname = tr.author) " +
-                " ORDER BY _posts_ " + (desc == Boolean.TRUE ? "DESC" : "") + ", id " +
-                (desc == Boolean.TRUE ? "DESC" : "");
+
         for (Integer parentId : parents){
             result.addAll(jdbcTemplate.query(
                     query,
@@ -230,8 +219,8 @@ public class PostsService {
                         );
                         return post;
                     },
-                    parentId,
-                    slug
+                    threadId,
+                    parentId
             ));
         }
         return result;

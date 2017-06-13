@@ -25,10 +25,6 @@ public class ThreadService {
     }
 
     public int addThread(ForumThread thread){
-
-
-        String querry = "SELECT slug FROM forums WHERE slug = LOWER(?)";
-
         if(thread.getCreated() == null){
             thread.setCreated(LocalDateTime.now().toString());
         }
@@ -39,10 +35,10 @@ public class ThreadService {
             createTime = Timestamp.from(createTime.toInstant().plusSeconds(-10800));
         }
 
-        querry = "INSERT INTO threads (author, created, forum, message, slug, title)" +
+        String query = "INSERT INTO threads (author, created, forum, message, slug, title)" +
                 "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 
-        return jdbcTemplate.queryForObject(querry,
+        int id =  jdbcTemplate.queryForObject(query,
                 Integer.class,
                 thread.getAuthor(),
                 createTime,
@@ -51,17 +47,15 @@ public class ThreadService {
                 thread.getSlug(),
                 thread.getTitle()
         );
+        jdbcTemplate.update(
+                "UPDATE forums SET threads = threads + 1 WHERE LOWER(slug) = LOWER(?)", thread.getForum()
+        );
+
+        return id;
     }
 
     public ForumThread getThread(String slug){
-        String query = "SELECT SUM(voice) " +
-                " FROM votes" +
-                " WHERE thread = (" +
-                " SELECT id FROM threads " +
-                " WHERE LOWER(threads.slug) = LOWER(?))";
-        Integer votes = jdbcTemplate.queryForObject(query, Integer.class, slug);
-
-        query = "SELECT * FROM threads WHERE LOWER(slug) = LOWER(?)";
+        String query = "SELECT * FROM threads WHERE LOWER(slug) = LOWER(?)";
         return jdbcTemplate.queryForObject(query, new Object[]{slug}, (rs, rowNum) -> {
             ForumThread thread = new ForumThread(
                     rs.getString("author"),
@@ -71,19 +65,14 @@ public class ThreadService {
                     rs.getString("message"),
                     rs.getString("slug"),
                     rs.getString("title"),
-                    (votes == null ? 0 : votes.intValue())
+                    rs.getInt("votes")
             );
             return thread;
         });
     }
 
     public ForumThread getThread(int id){
-        String query = "SELECT SUM(voice) " +
-                " FROM votes" +
-                " WHERE votes.thread = ? ";
-        Integer votes = jdbcTemplate.queryForObject(query, Integer.class, id);
-
-        query = "SELECT * FROM threads WHERE id = (?)";
+        String query = "SELECT * FROM threads WHERE id = (?)";
         return jdbcTemplate.queryForObject(query, new Object[]{id}, (rs, rowNum) -> {
             ForumThread thread = new ForumThread(
                     rs.getString("author"),
@@ -93,7 +82,7 @@ public class ThreadService {
                     rs.getString("message"),
                     rs.getString("slug"),
                     rs.getString("title"),
-                    (votes == null ? 0 : votes.intValue())
+                    rs.getInt("votes")
             );
             return thread;
         });
