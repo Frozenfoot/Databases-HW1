@@ -44,12 +44,12 @@ USER root
 RUN apt-get install -y openjdk-8-jdk-headless
 RUN apt-get install -y maven
 
-ENV WORK /opt/db_tp_forum
-ADD ./ $WORK/db-project
+ENV WORK /opt/Databases-HW1
+ADD DB_API/ $WORK/DB_API/
 
-WORKDIR $WORK/db-project
+WORKDIR $WORK/DB_API
 RUN mvn package
 
 EXPOSE 5000
 
-CMD service postgresql start && java -jar $WORK/db-project/target/tp-databases-forum-1.0-SNAPSHOT.jar
+CMD service postgresql start && java -jar $WORK/DB_API/target/DB_HW1-1.0-SNAPSHOT.jar
