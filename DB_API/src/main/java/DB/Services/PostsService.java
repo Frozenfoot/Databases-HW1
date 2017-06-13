@@ -29,9 +29,6 @@ public class PostsService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertPost(String slug_or_id, Post post) {
-    }
-
     public Post getPost(int id) {
         String query = "SELECT * FROM posts WHERE id = (?)";
         return jdbcTemplate.queryForObject(query, new Object[]{id}, (rs, rowNum) -> {
@@ -99,7 +96,7 @@ public class PostsService {
 
         }
         catch(SQLException e){return null;}
-        jdbcTemplate.update("UPDATE forums SET posts = posts + (?) WHERE LOWER(slug) = (?)", posts.size(), thread.getForum());
+        jdbcTemplate.update("UPDATE forums SET posts = posts + (?) WHERE LOWER(slug) = LOWER(?)", posts.size(), thread.getForum());
         return posts;
     }
 
@@ -141,20 +138,6 @@ public class PostsService {
                 " WHERE thread = (?) " +
                 " ORDER BY array_for_tree " + (desc == Boolean.TRUE ? "DESC" : "") +
                 " LIMIT ? OFFSET ?";
-//
-//        String tempQuery =
-//                "WITH RECURSIVE recursetree (author, created, forum, id, isEdited, message, parent, thread, path) AS (" +
-//                            "SELECT posts.*, array_append('{}'::int[], id) FROM posts " +
-//                            "WHERE parent = 0 " +
-//                            "AND thread = (?) " +
-//                        " UNION ALL " +
-//                        "   SELECT p.*, array_append(path, p.id)" +
-//                        "   FROM posts AS p" +
-//                        "   JOIN recursetree rt ON rt.id = p.parent" +
-//                        ")" +
-//                        " SELECT rt.*, array_to_string(path, '.') as path1 " +
-//                        "FROM recursetree AS rt " +
-//                        "ORDER BY path " + (desc == Boolean.TRUE ? "DESC" : "") + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, (rs, rowNum) -> {
             Post post = new Post(
                     rs.getString("author"),
@@ -183,19 +166,6 @@ public class PostsService {
     }
 
     public List<Post> getParentTreePosts(Integer threadId, List<Integer> parents, Boolean desc){
-//        String query =
-//                "WITH RECURSIVE recursetree (author, created, forum, id, isEdited, message, parent, thread, path) AS (" +
-//                "(SELECT posts.*, array_append('{}'::INT[], id) FROM posts " +
-//                " WHERE parent = 0 " +
-//                "AND thread = (?) " +
-//                " ORDER BY id )" +
-//                " UNION ALL" +
-//                " SELECT p.*, array_append(path, p.id) " +
-//                " FROM posts AS p " +
-//                " JOIN recursetree rt ON rt.id = p.parent )" +
-//                " SELECT rt.*, array_to_string(path, '.') AS path1 " +
-//                " FROM recursetree AS rt " +
-//                " ORDER BY path";
         String query =
                 "SELECT * " +
                 "FROM posts " +

@@ -224,7 +224,7 @@ public class ThreadController {
             case "parent_tree":
                 List<Integer> parents = postsService.getParents(thread.getId(), limit, offset, desc);
                 posts = postsService.getParentTreePosts(thread.getId(), parents, desc);
-                offset += posts.size();
+                offset += parents.size();
                 break;
         }
         return new ResponseEntity(new ThreadPosts(offset.toString(), posts), HttpStatus.OK);

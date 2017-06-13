@@ -51,6 +51,7 @@ public class ThreadService {
                 "UPDATE forums SET threads = threads + 1 WHERE LOWER(slug) = LOWER(?)", thread.getForum()
         );
 
+        jdbcTemplate.update("INSERT INTO users_in_forum (user_, forum_slug) VALUES ((?), (?))", thread.getAuthor(), thread.getForum());
         return id;
     }
 
