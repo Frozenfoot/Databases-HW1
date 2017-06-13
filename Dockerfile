@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Semyon Rogachev
+MAINTAINER rogachev
 
 # Обвновление списка пакетов
 RUN apt-get -y update
@@ -27,6 +27,11 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/$PGVER/main/pg_hba
 
 # And add ``listen_addresses`` to ``/etc/postgresql/$PGVER/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/$PGVER/main/postgresql.conf
+RUN echo "fsync = off" >> /etc/postgresql/$PGVER/main/postgresql.conf
+RUN echo "synchronous_commit = off" >> /etc/postgresql/$PGVER/main/postgresql.conf
+RUN echo "shared_buffers = 256MB" >> /etc/postgresql/$PGVER/main/postgresql.conf
+RUN echo "autovacuum = off" >> /etc/postgresql/$PGVER/main/postgresql.conf
+
 
 # Expose the PostgreSQL port
 EXPOSE 5432
@@ -34,29 +39,17 @@ EXPOSE 5432
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-# Back to the root user
 USER root
 
-#
-# Сборка проекта
-#
-
-# Установка JDK
 RUN apt-get install -y openjdk-8-jdk-headless
 RUN apt-get install -y maven
 
-# Копируем исходный код в Docker-контейнер
-ENV WORK /opt/Databases-HW1
-ADD DB_API/ $WORK/DB_API/
+ENV WORK /opt/db_tp_forum
+ADD ./ $WORK/db-project
 
-# Собираем и устанавливаем пакет
-WORKDIR $WORK/DB_API
+WORKDIR $WORK/db-project
 RUN mvn package
 
-# Объявлем порт сервера
 EXPOSE 5000
 
-#
-# Запускаем PostgreSQL и сервер
-#
-CMD service postgresql start && java -Xmx300M -Xmx300M -jar $WORK/DB_API/target/DB_HW1-1.0-SNAPSHOT.jar
+CMD service postgresql start && java -jar $WORK/db-project/target/tp-databases-forum-1.0-SNAPSHOT.jar

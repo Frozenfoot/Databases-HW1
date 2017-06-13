@@ -125,10 +125,6 @@ public class ThreadService {
             );
             return thread;
         });
-
-//        for (ForumThread thread : result ){
-//
-//        }
         return result;
     }
 

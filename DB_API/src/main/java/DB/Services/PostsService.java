@@ -69,7 +69,7 @@ public class PostsService {
                     preparedStatement.setArray(8, null);
                 }
                 else{
-                    preparedStatement.setArray(8, connection.createArrayOf("INT", paths.get(i)));
+                    preparedStatement.setArray(8, connection.createArrayOf("int4", paths.get(i)));
                 }
                 currentId = listOfId.get(i++);
                 post.setId(currentId);
@@ -92,6 +92,8 @@ public class PostsService {
             }
             preparedStatement.executeBatch();
             forumUsersStatement.executeBatch();
+            forumUsersStatement.close();
+            preparedStatement.close();
 
         }
         catch(SQLException e){return null;}
