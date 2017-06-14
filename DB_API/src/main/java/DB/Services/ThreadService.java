@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +100,8 @@ public class ThreadService {
         parameters.add(slug);
 
         if(since != null){
+            since = ZonedDateTime.parse(since).format(DateTimeFormatter.ISO_INSTANT);
+            Timestamp sinceTimeStamp = new Timestamp(ZonedDateTime.parse(since).toLocalDateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
             if(desc == Boolean.TRUE) {
                 query.append(" AND threads.created <= (?)");
             }
