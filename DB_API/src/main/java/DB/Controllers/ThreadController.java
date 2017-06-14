@@ -5,7 +5,6 @@ import DB.Services.PostsService;
 import DB.Services.ThreadService;
 import DB.Services.UserService;
 import DB.Services.VoiceService;
-import javafx.util.Pair;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -79,12 +78,12 @@ public class ThreadController {
         for(Post post : posts){
             int parentID = post.getParent();
             if(parentID != 0){
-                final Optional<Pair<Integer, Integer[]>> optional = children.stream().filter(e -> e.getKey() == parentID).findFirst();
+                final Optional<Pair<Integer, Integer[]>> optional = children.stream().filter(e -> e.x == parentID).findFirst();
                 if(!optional.isPresent()){
                     return new ResponseEntity(HttpStatus.CONFLICT);
                 }
                 else {
-                    paths.add(optional.get().getValue());
+                    paths.add(optional.get().y);
                 }
             }
             else {
