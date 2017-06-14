@@ -58,6 +58,7 @@ public class ThreadService {
     }
 
     public ForumThread getThread(String slug){
+        System.out.println("Get Thread for thread with ");
         String query = "SELECT * FROM threads WHERE LOWER(slug) = LOWER(?)";
         return jdbcTemplate.queryForObject(query, new Object[]{slug}, (rs, rowNum) -> {
             ForumThread thread = new ForumThread(
@@ -70,6 +71,8 @@ public class ThreadService {
                     rs.getString("title"),
                     rs.getInt("votes")
             );
+            System.out.println("Get thread for thread with id " + thread.getId());
+            System.out.println("Total votes:" + thread.getVotes());
             return thread;
         });
     }
@@ -123,7 +126,7 @@ public class ThreadService {
                     rs.getString("message"),
                     rs.getString("slug"),
                     rs.getString("title"),
-                    0
+                    rs.getInt("votes")
             );
             return thread;
         });

@@ -50,6 +50,7 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody List<Post> posts
     ) {
+        System.out.println("api/thread/create");
         Integer id = null;
         ForumThread thread = null;
         Post parent;
@@ -115,6 +116,7 @@ public class ThreadController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getThreadDetails(@PathVariable("slug_or_id") String slug){
+        System.out.println("api/thread/details");
         Integer id;
         ForumThread thread;
         try{
@@ -131,7 +133,7 @@ public class ThreadController {
                 thread = threadService.getThread(id);
             }
         }
-        catch (EmptyResultDataAccessException e){
+        catch (EmptyResultDataAccessException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity(thread, HttpStatus.OK);
@@ -147,6 +149,7 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody ForumThread thread
     ) {
+        System.out.println("api/thread/details change");
         Integer id;
         ForumThread dbThread;
         try{
@@ -185,6 +188,7 @@ public class ThreadController {
             @RequestParam(name = "desc", required = false, defaultValue = "false") final Boolean desc
     )
     {
+        System.out.println("api/thread/posts");
         ForumThread thread;
 
         Integer id = null;
@@ -239,6 +243,7 @@ public class ThreadController {
             @PathVariable("slug_or_id") String slug,
             @RequestBody Vote vote
     ) {
+        System.out.println("api/thread/vote");
         Integer id;
         ForumThread dbThread;
         try{

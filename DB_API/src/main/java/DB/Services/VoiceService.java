@@ -20,7 +20,6 @@ public class VoiceService {
     }
 
     public void addVote(Vote vote, ForumThread thread){
-//        System.out.println("Adding vote by user:" + vote.getNickname());
         String query = "SELECT COUNT(*) FROM votes WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
         Integer inserted = jdbcTemplate.queryForObject(query, Integer.class, vote.getNickname(), thread.getId());
         if(inserted == 0){

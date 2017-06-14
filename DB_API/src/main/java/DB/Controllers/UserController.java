@@ -2,7 +2,6 @@ package DB.Controllers;
 
 import DB.Models.User;
 import DB.Services.UserService;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +35,7 @@ public class UserController {
             @RequestBody User user,
             @PathVariable("nickname") String nickname
     ) {
+        System.out.println("api/user/create");
           user.setNickname(nickname);
           try {
               userService.addUser(user);
@@ -52,6 +52,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getUser(@PathVariable("nickname") String nickname){
+        System.out.println("api/user/profile");
           try{
               return new ResponseEntity<> (userService.getUser(nickname), HttpStatus.OK);
           }
@@ -70,6 +71,7 @@ public class UserController {
             @PathVariable("nickname") String nickname,
             @RequestBody User user
     ) {
+        System.out.println("api/user/profile post");
         try{
             user.setNickname(nickname);
             userService.updateUser(user);

@@ -1,10 +1,4 @@
 CREATE EXTENSION IF NOT EXISTS CITEXT;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS forums;
-DROP TABLE IF EXISTS threads;
-DROP TABLE IF EXISTS votes;
-DROP TABLE IF EXISTS posts;
-DROP TABLE IF EXISTS users_in_forum;
 
 CREATE TABLE IF NOT EXISTS users(
   about TEXT,
@@ -13,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users(
   nickname CITEXT UNIQUE PRIMARY KEY
 );
 
-CREATE INDEX ON users (lower(nickname));
+CREATE INDEX IF NOT EXISTS index_users_nickname ON users (lower(nickname));
 
 CREATE TABLE IF NOT EXISTS forums(
   id SERIAL NOT NULL PRIMARY KEY,
@@ -24,7 +18,7 @@ CREATE TABLE IF NOT EXISTS forums(
   user_ CITEXT NOT NULL REFERENCES users(nickname)
 );
 
-CREATE INDEX ON forums (user_);
+CREATE INDEX IF NOT EXISTS index_forums_user ON forums (user_);
 
 CREATE TABLE IF NOT EXISTS threads(
   author CITEXT NOT NULL REFERENCES users(nickname),
@@ -37,7 +31,7 @@ CREATE TABLE IF NOT EXISTS threads(
   votes BIGINT DEFAULT 0 NOT NULL
 );
 
-CREATE INDEX ON threads (slug);
+CREATE INDEX IF NOT EXISTS index_threads_slug ON threads (slug);
 
 CREATE TABLE IF NOT EXISTS votes(
   thread INTEGER NOT NULL,
@@ -46,7 +40,7 @@ CREATE TABLE IF NOT EXISTS votes(
   UNIQUE (thread, nickname)
 );
 
-CREATE INDEX ON votes (nickname, thread);
+CREATE INDEX IF NOT EXISTS index_votes_nickname_thread ON votes (nickname, thread);
 
 CREATE TABLE IF NOT EXISTS posts(
   author CITEXT NOT NULL REFERENCES users(nickname),
@@ -61,12 +55,12 @@ CREATE TABLE IF NOT EXISTS posts(
 );
 
 
-CREATE INDEX ON posts (author,forum);
-CREATE INDEX ON posts (id, parent, thread);
-CREATE INDEX ON posts (thread, id);
-CREATE INDEX ON posts ((posts.array_for_tree[1]), id);
-CREATE INDEX ON posts (thread, array_for_tree);
-CREATE INDEX ON posts (thread, created, id);
+CREATE INDEX IF NOT EXISTS index_posts_a_f ON posts (author,forum);
+CREATE INDEX IF NOT EXISTS index_posts_i_p_t ON posts (id, parent, thread);
+CREATE INDEX IF NOT EXISTS index_posts_t_i ON posts (thread, id);
+CREATE INDEX IF NOT EXISTS index_posts_a_i ON posts ((posts.array_for_tree[1]), id);
+CREATE INDEX IF NOT EXISTS index_posts_t_a ON posts (thread, array_for_tree);
+CREATE INDEX IF NOT EXISTS index_posts_t_c_i ON posts (thread, created, id);
 
 CREATE TABLE IF NOT EXISTS users_in_forum (
   user_ CITEXT NOT NULL,
