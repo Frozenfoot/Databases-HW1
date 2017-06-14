@@ -1,14 +1,15 @@
 package DB.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.session.SessionProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by frozenfoot on 17.03.17.
  */
 @Service
+@Transactional
 public class ServiceService {
     @Autowired
     JdbcTemplate jdbcTemplate;

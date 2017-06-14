@@ -3,6 +3,7 @@ package DB.Services;
 import DB.Models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * Created by frozenfoot on 15.03.17.
  */
 @Service
+@Transactional
 public class UserService {
 
     private JdbcTemplate jdbcTemplate;

@@ -4,11 +4,13 @@ import DB.Models.Forum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by frozenfoot on 15.03.17.
  */
 @Service
+@Transactional
 public class ForumService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
