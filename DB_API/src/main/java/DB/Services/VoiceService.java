@@ -19,11 +19,19 @@ public class VoiceService {
     }
 
     public void addVote(Vote vote, int threadId){
-        String query =
-                "INSERT INTO votes (nickname, voice, thread) " +
-                "VALUES (?, ?, ?) " +
-                "ON CONFLICT (nickname, thread) DO UPDATE SET voice = EXCLUDED.voice";
-        jdbcTemplate.update(query, vote.getNickname(), vote.getVoice(), threadId);
+
+        String query = "SELECT COUNT(*) FROM votes WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
+        Integer inserted = jdbcTemplate.queryForObject(query, Integer.class, vote.getNickname(), threadId);
+        if(inserted == 0){
+            query =
+                    "INSERT INTO votes (nickname, voice, thread) " +
+                            "VALUES (?, ?, ?) ";
+            jdbcTemplate.update(query, vote.getNickname(), vote.getVoice(), threadId);
+        }
+        else{
+            query = "UPDATE votes SET voice = (?) WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
+            jdbcTemplate.update(query, vote.getVoice(), vote.getNickname(), threadId);
+        }
         query =
                 "UPDATE threads " +
                 "SET votes = (" +
