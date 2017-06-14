@@ -1,8 +1,8 @@
 package DB.Services;
 
 import DB.Models.ForumThread;
+import DB.Models.Pair;
 import DB.Models.Post;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
