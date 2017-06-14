@@ -44,7 +44,6 @@ public class PostController {
     public ResponseEntity getPostDetails(
             @PathVariable("id") int id,
             @RequestParam(value = "related", required = false) ArrayList<String> related){
-        System.out.println("api/post/details");
         Post post;
         try{
             post = postService.getPost(id);
@@ -83,7 +82,6 @@ public class PostController {
             @PathVariable("id") int id,
             @RequestBody Post post
     ) {
-        System.out.println("api/post/details post");
         Post dbPost;
         try{
             dbPost = postService.getPost(id);

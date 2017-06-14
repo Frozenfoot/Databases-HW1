@@ -42,7 +42,6 @@ public class ForumController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity createForum(@RequestBody Forum forum) {
-        System.out.println("api/forum/create");
         try {
             forumService.addForum(forum);
         } catch (DuplicateKeyException e) {
@@ -62,7 +61,6 @@ public class ForumController {
     public ResponseEntity createThread(
             @RequestBody ForumThread thread,
             @PathVariable("slug") String slug) {
-        System.out.println("api/forum/create thread");
         Forum forum;
         try {
             forum = forumService.getForum(slug);
@@ -92,7 +90,6 @@ public class ForumController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getForumDetails(@PathVariable("slug") String slug) {
-        System.out.println("api/forum/details");
         try {
             return new ResponseEntity(forumService.getForum(slug), HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
@@ -111,7 +108,6 @@ public class ForumController {
             @RequestParam(value = "since", required = false) String since,
             @RequestParam(value = "desc", required = false) Boolean desc
     ) {
-        System.out.println("api/forum/threads");
         try{
             forumService.getForum(slug);
         }
@@ -119,10 +115,6 @@ public class ForumController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
             List<ForumThread> result = threadService.getThreads(slug, limit, since, desc);
-            for(ForumThread item : result){
-                System.out.println(item.getId());
-                System.out.println(item.getVotes());
-            }
             return new ResponseEntity (result, HttpStatus.OK);
     }
 
@@ -139,7 +131,6 @@ public class ForumController {
             @RequestParam(value = "desc", required = false) Boolean desc
     ) {
         try{
-            System.out.println("api/forum/users");
             Forum forum = forumService.getForum(slug);
             return new ResponseEntity(userService.getForumUsers(slug, limit, since, desc), HttpStatus.OK);
         }
