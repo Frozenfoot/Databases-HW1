@@ -1,5 +1,6 @@
 package DB.Services;
 
+import DB.Models.ForumThread;
 import DB.Models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,19 +19,19 @@ public class VoiceService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addVote(Vote vote, int threadId){
-
+    public void addVote(Vote vote, ForumThread thread){
+//        System.out.println("Adding vote by user:" + vote.getNickname());
         String query = "SELECT COUNT(*) FROM votes WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
-        Integer inserted = jdbcTemplate.queryForObject(query, Integer.class, vote.getNickname(), threadId);
+        Integer inserted = jdbcTemplate.queryForObject(query, Integer.class, vote.getNickname(), thread.getId());
         if(inserted == 0){
             query =
                     "INSERT INTO votes (nickname, voice, thread) " +
                             "VALUES (?, ?, ?) ";
-            jdbcTemplate.update(query, vote.getNickname(), vote.getVoice(), threadId);
+            jdbcTemplate.update(query, vote.getNickname(), vote.getVoice(), thread.getId());
         }
         else{
             query = "UPDATE votes SET voice = (?) WHERE LOWER(nickname) = LOWER(?) AND thread = (?)";
-            jdbcTemplate.update(query, vote.getVoice(), vote.getNickname(), threadId);
+            jdbcTemplate.update(query, vote.getVoice(), vote.getNickname(), thread.getId());
         }
         query =
                 "UPDATE threads " +
@@ -39,7 +40,7 @@ public class VoiceService {
                         "FROM votes " +
                         "WHERE (thread) = (?)" +
                         ")" +
-                        "WHERE id = (?)";
-        jdbcTemplate.update(query, threadId, threadId);
+                        "WHERE id = (?) RETURNING votes";
+        thread.setVotes(jdbcTemplate.queryForObject(query, Integer.class, thread.getId(), thread.getId()));
     }
 }

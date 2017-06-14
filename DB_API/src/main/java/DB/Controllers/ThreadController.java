@@ -267,8 +267,8 @@ public class ThreadController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        voiceService.addVote(vote, dbThread.getId());
+        voiceService.addVote(vote, dbThread);
 
-        return new ResponseEntity(threadService.getThread(dbThread.getId()), HttpStatus.OK);
+        return new ResponseEntity(dbThread, HttpStatus.OK);
     }
 }

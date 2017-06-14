@@ -51,30 +51,18 @@
       <file leaf-file-name="V1__init.sql" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__init.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1386">
+            <state relative-caret-position="1270">
               <caret line="77" column="59" lean-forward="false" selection-start-line="77" selection-start-column="59" selection-end-line="77" selection-end-column="59" />
-              <folding>
-                <marker date="1497451800734" expanded="true" signature="400:647" ph="CREATE TABLE... forums" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Pair.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/DB/Models/Pair.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12" column="1" lean-forward="false" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="application.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
+      <file leaf-file-name="PostController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/PostController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="43" lean-forward="true" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+            <state relative-caret-position="206">
+              <caret line="39" column="13" lean-forward="false" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -93,6 +81,26 @@
                 <marker date="1497449132895" expanded="true" signature="904:930" ph="SELECT COUNT... users" />
                 <marker date="1497449132895" expanded="true" signature="1028:1073" ph="TRUNCATE for... " />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ThreadController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="559">
+              <caret line="271" column="42" lean-forward="false" selection-start-line="271" selection-start-column="42" selection-end-line="271" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="application.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="9" column="43" lean-forward="true" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -117,7 +125,7 @@
       <file leaf-file-name="UserService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/UserService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-971">
+            <state relative-caret-position="144">
               <caret line="14" column="14" lean-forward="false" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
               <folding>
                 <marker date="1497449132928" expanded="true" signature="559:651" ph="INSERT INTO users... " />
@@ -132,52 +140,18 @@
       <file leaf-file-name="VoiceService.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/VoiceService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="33" column="9" lean-forward="false" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+            <state relative-caret-position="90">
+              <caret line="23" column="37" lean-forward="false" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1497453016478" expanded="true" signature="593:669" ph="SELECT COUNT... votes" />
-                <marker date="1497453016478" expanded="true" signature="848:941" ph="INSERT INTO votes... " />
-                <marker date="1497453016478" expanded="true" signature="1077:1105" ph="UPDATE votes... " />
-                <marker date="1497453016478" expanded="true" signature="1077:1111" ph="UPDATE votes... " />
-                <marker date="1497453016478" expanded="true" signature="1077:1155" ph="UPDATE votes... " />
-                <marker date="1497453016478" expanded="true" signature="1288:1546" ph="UPDATE threa... " />
-                <marker date="1497453016478" expanded="true" signature="1366:1473" ph="SELECT SUM(v... votes" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/DB/Application.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-              <folding>
-                <element signature="e#336#337#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PostsService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="163" column="58" lean-forward="true" selection-start-line="163" selection-start-column="58" selection-end-line="163" selection-end-column="58" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <marker date="1497441570496" expanded="true" signature="933:967" ph="SELECT * FRO... posts" />
-                <marker date="1497441570496" expanded="true" signature="1650:1705" ph="SELECT id, a... posts" />
-                <marker date="1497441570496" expanded="true" signature="1999:2155" ph="INSERT INTO posts... " />
-                <marker date="1497441570496" expanded="true" signature="2646:2740" ph="INSERT INTO users_in_forum... " />
-                <marker date="1497441570496" expanded="true" signature="2837:2894" ph="SELECT nextv... generate_series" />
-                <marker date="1497441570496" expanded="true" signature="4540:4606" ph="UPDATE forum... " />
-                <marker date="1497441570496" expanded="true" signature="4743:4862" ph="UPDATE posts... " />
-                <marker date="1497441570496" expanded="true" signature="5060:5297" ph="SELECT * FRO... posts" />
-                <marker date="1497441570496" expanded="true" signature="6159:6365" ph="SELECT * FRO... posts" />
-                <marker date="1497441570496" expanded="true" signature="7157:7346" ph="SELECT id FR... posts" />
-                <marker date="1497441570496" expanded="true" signature="7575:7811" ph="SELECT * FRO... posts" />
+                <marker date="1497456714304" expanded="true" signature="703:779" ph="SELECT COUNT... votes" />
+                <marker date="1497456714304" expanded="true" signature="964:1057" ph="INSERT INTO votes... " />
+                <marker date="1497456714304" expanded="true" signature="1199:1227" ph="UPDATE votes... " />
+                <marker date="1497456714304" expanded="true" signature="1199:1233" ph="UPDATE votes... " />
+                <marker date="1497456714304" expanded="true" signature="1199:1277" ph="UPDATE votes... " />
+                <marker date="1497456714304" expanded="true" signature="1416:1674" ph="UPDATE threa... " />
+                <marker date="1497456714304" expanded="true" signature="1416:1690" ph="UPDATE threa... " />
+                <marker date="1497456714304" expanded="true" signature="1494:1601" ph="SELECT SUM(v... votes" />
               </folding>
             </state>
           </provider>
@@ -186,7 +160,7 @@
       <file leaf-file-name="ForumService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/ForumService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
+            <state relative-caret-position="486">
               <caret line="29" column="35" lean-forward="true" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -227,6 +201,7 @@
       <find>thread</find>
       <find>flywa</find>
       <find>Pair</find>
+      <find>voi</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -245,7 +220,6 @@
         <option value="$PROJECT_DIR$/../Dockerfile" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Controllers/ServiceController.java" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Models/Pair.java" />
-        <option value="$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Services/ForumService.java" />
@@ -253,6 +227,7 @@
         <option value="$PROJECT_DIR$/src/main/java/DB/Services/ThreadService.java" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Services/UserService.java" />
         <option value="$PROJECT_DIR$/src/main/resources/db/migration/V1__init.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java" />
         <option value="$PROJECT_DIR$/src/main/java/DB/Services/VoiceService.java" />
       </list>
     </option>
@@ -450,36 +425,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DB_HW1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DB_API" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -965,12 +910,12 @@
       <workItem from="1497426659623" duration="733000" />
       <workItem from="1497441525611" duration="525000" />
       <workItem from="1497448234382" duration="170000" />
-      <workItem from="1497448438336" duration="4575000" />
+      <workItem from="1497448438336" duration="7068000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68330000" />
+    <option name="totallyTimeSpent" value="70823000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-5" y="0" width="1376" height="742" extended-state="6" />
@@ -1049,9 +994,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1497451800734" expanded="true" signature="400:647" ph="CREATE TABLE... forums" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1274,16 +1217,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/PostController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ServiceController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -1330,45 +1263,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.forums">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.posts">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.threads">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.users_in_forum">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
@@ -1381,30 +1275,6 @@
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.votes">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-          <column-attributes>
-            <column name="ctid" enabled="false" />
-          </column-attributes>
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="269" column="0" lean-forward="false" selection-start-line="269" selection-start-column="0" selection-end-line="269" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1461,30 +1331,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="43" lean-forward="true" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/ForumService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="29" column="35" lean-forward="true" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1497449132848" expanded="true" signature="592:727" ph="INSERT INTO forums... " />
-            <marker date="1497449132848" expanded="true" signature="666:725" ph="SELECT nickn... users" />
-            <marker date="1497449132848" expanded="true" signature="890:989" ph="SELECT * FRO... forums" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/PostsService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
+        <state relative-caret-position="2628">
           <caret line="163" column="58" lean-forward="true" selection-start-line="163" selection-start-column="58" selection-end-line="163" selection-end-column="58" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1535,7 +1384,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/UserService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-971">
+        <state relative-caret-position="144">
           <caret line="14" column="14" lean-forward="false" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
           <folding>
             <marker date="1497449132928" expanded="true" signature="559:651" ph="INSERT INTO users... " />
@@ -1546,29 +1395,120 @@
         </state>
       </provider>
     </entry>
+    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.posts">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/ForumService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="29" column="35" lean-forward="true" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1497449132848" expanded="true" signature="592:727" ph="INSERT INTO forums... " />
+            <marker date="1497449132848" expanded="true" signature="666:725" ph="SELECT nickn... users" />
+            <marker date="1497449132848" expanded="true" signature="890:989" ph="SELECT * FRO... forums" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.forums">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.threads">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="dbDummy://dbtable:/13938a50/f0a01cc2-250f-4343-a351-8811e956eef1/docker.public.votes">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+          <column-attributes>
+            <column name="ctid" enabled="false" />
+          </column-attributes>
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="43" lean-forward="true" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__init.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1386">
+        <state relative-caret-position="1270">
           <caret line="77" column="59" lean-forward="false" selection-start-line="77" selection-start-column="59" selection-end-line="77" selection-end-column="59" />
-          <folding>
-            <marker date="1497451800734" expanded="true" signature="400:647" ph="CREATE TABLE... forums" />
-          </folding>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/PostController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="39" column="13" lean-forward="false" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DB/Controllers/ThreadController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="559">
+          <caret line="271" column="42" lean-forward="false" selection-start-line="271" selection-start-column="42" selection-end-line="271" selection-end-column="42" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DB/Services/VoiceService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="33" column="9" lean-forward="false" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+        <state relative-caret-position="90">
+          <caret line="23" column="37" lean-forward="false" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1497453016478" expanded="true" signature="593:669" ph="SELECT COUNT... votes" />
-            <marker date="1497453016478" expanded="true" signature="848:941" ph="INSERT INTO votes... " />
-            <marker date="1497453016478" expanded="true" signature="1077:1105" ph="UPDATE votes... " />
-            <marker date="1497453016478" expanded="true" signature="1077:1111" ph="UPDATE votes... " />
-            <marker date="1497453016478" expanded="true" signature="1077:1155" ph="UPDATE votes... " />
-            <marker date="1497453016478" expanded="true" signature="1288:1546" ph="UPDATE threa... " />
-            <marker date="1497453016478" expanded="true" signature="1366:1473" ph="SELECT SUM(v... votes" />
+            <marker date="1497456714304" expanded="true" signature="703:779" ph="SELECT COUNT... votes" />
+            <marker date="1497456714304" expanded="true" signature="964:1057" ph="INSERT INTO votes... " />
+            <marker date="1497456714304" expanded="true" signature="1199:1227" ph="UPDATE votes... " />
+            <marker date="1497456714304" expanded="true" signature="1199:1233" ph="UPDATE votes... " />
+            <marker date="1497456714304" expanded="true" signature="1199:1277" ph="UPDATE votes... " />
+            <marker date="1497456714304" expanded="true" signature="1416:1674" ph="UPDATE threa... " />
+            <marker date="1497456714304" expanded="true" signature="1416:1690" ph="UPDATE threa... " />
+            <marker date="1497456714304" expanded="true" signature="1494:1601" ph="SELECT SUM(v... votes" />
           </folding>
         </state>
       </provider>
