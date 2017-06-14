@@ -6,6 +6,7 @@ import DB.Models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +57,8 @@ public class PostsService {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-        try(Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+        try {
+            Connection connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.NO_GENERATED_KEYS);
             PreparedStatement forumUsersStatement = connection.prepareStatement(
                     "INSERT INTO users_in_forum (user_, forum_slug) " +
@@ -94,6 +96,7 @@ public class PostsService {
             forumUsersStatement.executeBatch();
             forumUsersStatement.close();
             preparedStatement.close();
+            connection.close();
 
         }
         catch(SQLException e){return null;}
